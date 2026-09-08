@@ -102,6 +102,36 @@
       padding: 2px 10px;
     }
 
+    .cover-lock-badge {
+      display: none;
+      position: absolute;
+      top: 18mm;
+      left: 22mm;
+      font-size: 12px;
+      letter-spacing: .2em;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 2px 10px;
+    }
+
+    .cover.is-locked .cover-lock-badge { display: block; }
+    .cover.is-locked .add-row { display: none; }
+    .cover.is-locked input,
+    .cover.is-locked textarea {
+      pointer-events: none;
+      caret-color: transparent;
+      cursor: default;
+      background: transparent !important;
+    }
+    .cover.is-locked .cover-title:focus,
+    .cover.is-locked input:focus {
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+    .cover.is-locked input[type="date"]::-webkit-calendar-picker-indicator {
+      display: none;
+    }
+
     .cover-head {
       text-align: center;
       margin-top: 28mm;
@@ -239,6 +269,23 @@
       resize: vertical;
       outline: none;
       border-radius: 2px;
+      overflow: hidden;
+      field-sizing: content;
+    }
+
+    /* 打印时用普通块级元素替代 textarea，避免浏览器只印出可见的 2 行 */
+    .print-plain {
+      display: none;
+      width: 100%;
+      min-height: 3.4em;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      font: inherit;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      border-radius: 2px;
     }
 
     textarea:focus { border-color: var(--focus); background: #fff; box-shadow: 0 0 0 3px rgba(138, 160, 179, .18); }
@@ -364,11 +411,27 @@
         page-break-after: always;
         break-after: page;
       }
-      h2 { break-after: avoid; }
-      .section { break-inside: avoid; }
+      h2, .item-title, .hint, .lead { break-after: avoid; page-break-after: avoid; }
+      /* 整节避免分页会在内容超过一页时被裁切，改为允许跨页 */
+      .section { break-inside: auto; }
       table { break-inside: auto; }
-      tr { break-inside: avoid; }
-      textarea, .blank, table.kv td input, table.data td input, table.data td textarea {
+      tr { break-inside: avoid; page-break-inside: avoid; }
+      textarea {
+        display: none !important;
+      }
+      .print-plain {
+        display: block !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      table.data td .print-plain,
+      table.kv td .print-plain {
+        border: none;
+        min-height: 2.6em;
+        padding: 8px;
+        border-radius: 0;
+      }
+      .blank, table.kv td input, table.data td input {
         background: transparent !important;
         box-shadow: none !important;
       }
@@ -409,12 +472,13 @@
   </div>
 
   <div class="sheet" id="sheet">
-    <!-- 封面 -->
-    <section class="cover">
+    <!-- 封面默认锁定。改封面见 agent.md，不要在页面里解锁。 -->
+    <section class="cover is-locked">
+      <div class="cover-lock-badge no-print">封面已锁定</div>
       <div class="cover-mark">内部资料</div>
       <div class="cover-head">
         <hr class="cover-rule">
-        <input class="cover-title" name="docTitle" value="项目交接文档" maxlength="30">
+        <input class="cover-title" name="docTitle" value="项目交接文档" maxlength="30" readonly>
         <hr class="cover-rule">
         <p class="cover-sub">试行模板　V1.0</p>
       </div>
@@ -422,19 +486,19 @@
       <table class="cover-meta">
         <tbody><tr>
           <th>部　门</th>
-          <td><input name="dept" placeholder="请填写部门名称" value="HD"></td>
+          <td><input name="dept" placeholder="请填写部门名称" value="HD" readonly></td>
         </tr>
         <tr>
           <th>编 写 人</th>
-          <td><input name="author" placeholder="请填写编写人" value="周紫欣"></td>
+          <td><input name="author" placeholder="请填写编写人" value="周紫欣" readonly></td>
         </tr>
         <tr>
           <th>编写日期</th>
-          <td><input type="date" name="writeDate" value="2026-09-08"></td>
+          <td><input type="date" name="writeDate" value="2026-09-08" readonly></td>
         </tr>
         <tr>
           <th>审 核 人</th>
-          <td><input name="reviewer" placeholder="请填写审核人" value="黄灿"></td>
+          <td><input name="reviewer" placeholder="请填写审核人" value="黄灿" readonly></td>
         </tr>
       </tbody></table>
 
@@ -450,20 +514,20 @@
             </tr>
           </thead>
           <tbody><tr>
-              <td><input value="V1.0"></td>
-              <td><input value="初版发布，建立项目交接模板"></td>
-              <td><input value="周紫欣"></td>
-              <td><input type="date" value="2026-09-08"></td>
+              <td><input value="V1.0" readonly></td>
+              <td><input value="初版发布，建立项目交接模板" readonly></td>
+              <td><input value="周紫欣" readonly></td>
+              <td><input type="date" value="2026-09-08" readonly></td>
             </tr><tr>
-              <td><input value=""></td>
-              <td><input value=""></td>
-              <td><input value=""></td>
-              <td><input type="date" value=""></td>
+              <td><input value="" readonly></td>
+              <td><input value="" readonly></td>
+              <td><input value="" readonly></td>
+              <td><input type="date" value="" readonly></td>
             </tr><tr>
-              <td><input value=""></td>
-              <td><input value=""></td>
-              <td><input value=""></td>
-              <td><input type="date" value=""></td>
+              <td><input value="" readonly></td>
+              <td><input value="" readonly></td>
+              <td><input value="" readonly></td>
+              <td><input type="date" value="" readonly></td>
             </tr></tbody>
         </table>
         <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
@@ -766,6 +830,7 @@
         });
         data.tables[table.dataset.name] = rows;
       });
+      data.coverLocked = true;
       return data;
     }
 
@@ -794,6 +859,19 @@
           tbody.appendChild(tr);
         });
       });
+      setCoverLocked(true);
+      fitAllTextareas();
+    }
+
+    function setCoverLocked(locked) {
+      const cover = document.querySelector(".cover");
+      cover.classList.toggle("is-locked", locked);
+      cover.querySelectorAll("input, textarea").forEach((el) => {
+        if (locked) el.setAttribute("readonly", "readonly");
+        else el.removeAttribute("readonly");
+        el.readOnly = locked;
+        el.tabIndex = locked ? -1 : 0;
+      });
     }
 
     function save() {
@@ -813,6 +891,34 @@
       saveTimer = setTimeout(save, 300);
     }
 
+    function fitTextarea(el) {
+      if (!el || el.tagName !== "TEXTAREA") return;
+      el.style.height = "auto";
+      el.style.overflow = "hidden";
+      el.style.height = el.scrollHeight + "px";
+    }
+
+    function fitAllTextareas() {
+      document.querySelectorAll("textarea").forEach(fitTextarea);
+    }
+
+    function syncPrintMirrors() {
+      document.querySelectorAll("textarea").forEach((ta) => {
+        fitTextarea(ta);
+        let mirror = ta.nextElementSibling;
+        if (!mirror || !mirror.classList.contains("print-plain")) {
+          mirror = document.createElement("div");
+          mirror.className = "print-plain";
+          ta.insertAdjacentElement("afterend", mirror);
+        }
+        mirror.textContent = ta.value || "";
+      });
+    }
+
+    function clearPrintMirrors() {
+      document.querySelectorAll(".print-plain").forEach((el) => el.remove());
+    }
+
     function addRow(btn) {
       const table = btn.parentElement.querySelector("table.data") || btn.previousElementSibling;
       const tbody = table.querySelector("tbody");
@@ -820,6 +926,7 @@
       tr.querySelectorAll("input, textarea").forEach((el) => {
         if (el.type === "checkbox") el.checked = false;
         else el.value = "";
+        if (el.tagName === "TEXTAREA") el.style.height = "";
       });
       tbody.appendChild(tr);
       scheduleSave();
@@ -857,6 +964,7 @@
     }
 
     async function saveToFile() {
+      setCoverLocked(true);
       save();
       bakeDom();
       const data = collect();
@@ -899,7 +1007,9 @@
     }
 
     function printDoc() {
+      setCoverLocked(true);
       save();
+      syncPrintMirrors();
       window.print();
     }
 
@@ -941,8 +1051,14 @@
       e.target.value = "";
     });
 
-    document.getElementById("sheet").addEventListener("input", scheduleSave);
+    document.getElementById("sheet").addEventListener("input", (e) => {
+      if (e.target.tagName === "TEXTAREA") fitTextarea(e.target);
+      scheduleSave();
+    });
     document.getElementById("sheet").addEventListener("change", scheduleSave);
+
+    window.addEventListener("beforeprint", syncPrintMirrors);
+    window.addEventListener("afterprint", clearPrintMirrors);
 
     try {
       if (typeof EMBEDDED_DATA !== "undefined" && EMBEDDED_DATA) {
@@ -952,6 +1068,7 @@
         if (raw) apply(JSON.parse(raw));
       }
     } catch (e) {}
+    fitAllTextareas();
   </script>
 
 
