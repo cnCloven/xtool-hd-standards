@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>规范总览 - 汽车诊断软件开发团队</title>
+<style>
+  :root{
+    --primary:#0b5cad; --primary-dark:#073d75; --bg:#f6f8fb;
+    --card:#ffffff; --border:#dde3ec; --text:#1f2d3d; --muted:#6b7a90;
+    --warn:#d98014;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",Arial,sans-serif;
+       color:var(--text);background:var(--bg);line-height:1.7;font-size:15px}
+  header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;
+         padding:32px 40px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+  header h1{margin:0 0 8px;font-size:26px}
+  header .meta{opacity:.92;font-size:13px}
+  main{max-width:1100px;margin:24px auto;padding:0 24px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:8px;
+        padding:24px 28px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{color:var(--primary-dark);border-bottom:2px solid var(--primary);padding-bottom:8px;
+     margin-top:0;font-size:20px}
+  .toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .toc-item{display:block;padding:14px 16px;border:1px solid var(--border);border-radius:8px;
+            background:#fbfcfe;transition:all .15s;text-decoration:none;color:inherit}
+  .toc-item:hover{border-color:var(--primary);background:#fff;text-decoration:none;transform:translateY(-1px)}
+  .toc-item .n{color:var(--muted);font-size:12px;font-weight:bold}
+  .toc-item .t{font-weight:600;color:var(--text);margin-top:2px}
+  .toc-item .s{font-size:12px;color:var(--muted);margin-top:4px;
+               display:inline-block;padding:2px 8px;border-radius:10px;background:#eef3fb;color:var(--primary-dark)}
+  .toc-item .s.wip{background:#fff4e0;color:var(--warn)}
+  .legend{margin-top:14px;font-size:13px;color:var(--muted)}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
+</style>
+</head>
+<body>
+<header>
+  <h1>汽车诊断软件开发团队规范知识库</h1>
+  <div class="meta">
+    维护人:【待补充 - 团队主管】
+  </div>
+</header>
+
+<main>
+
+  <div class="card">
+    <h2>文档索引</h2>
+    <div class="toc-grid">
+      <a class="toc-item" href="01-编码规范.html">
+        <div class="n">01</div><div class="t">编码规范 &amp; 代码评审</div>
+      </a>
+      <a class="toc-item" href="02-Git规范.html">
+        <div class="n">02</div><div class="t">Git 工作流 &amp; 里程碑</div>
+      </a>
+      <a class="toc-item" href="03-华为云Bug处理.html">
+        <div class="n">03</div><div class="t">华为云 Bug 处理</div>
+      </a>
+      <a class="toc-item" href="04-版本发布.html">
+        <div class="n">04</div><div class="t">版本与发布</div>
+      </a>
+      <a class="toc-item" href="05-团队协作.html">
+        <div class="n">05</div><div class="t">团队协作与文档</div>
+      </a>
+      <a class="toc-item" href="06-新人入职.html">
+        <div class="n">06</div><div class="t">新人入职指南</div>
+        <span class="s">待补充</span>
+      </a>
+    </div>
+    <div class="legend">
+      状态图例:
+      <span class="s">待补充</span> &nbsp;
+      <span class="s wip">撰写中</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>© 汽车诊断软件开发团队 · 内部资料 · 请勿外传</footer>
+</body>
+</html>

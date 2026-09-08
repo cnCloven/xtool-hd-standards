@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04 - 版本与发布</title>
+<style>
+  :root{--primary:#0b5cad;--primary-dark:#073d75;--bg:#f6f8fb;--card:#fff;
+        --border:#dde3ec;--text:#1f2d3d;--muted:#6b7a90;--warn:#d98014;
+        --ok:#1a8a3f;--danger:#c0392b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;
+       color:var(--text);background:var(--bg);line-height:1.75;font-size:15px}
+  header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;
+         padding:20px 40px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+  header .crumb{font-size:12px;opacity:.85}
+  header .crumb a{color:#fff;text-decoration:underline}
+  header h1{margin:6px 0 0;font-size:22px}
+  header .meta{opacity:.9;font-size:13px;margin-top:4px}
+  main{max-width:1000px;margin:20px auto;padding:0 24px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:8px;
+        padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{color:var(--primary-dark);border-bottom:2px solid var(--primary);padding-bottom:8px;
+     margin-top:0;font-size:19px}
+  h3{color:var(--primary-dark);font-size:16px;margin-top:22px;margin-bottom:6px}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top}
+  th{background:#eef3fb;color:var(--primary-dark)}
+  tr:nth-child(even) td{background:#fafbfd}
+  a{color:var(--primary);text-decoration:none}
+  a:hover{text-decoration:underline}
+  ul,ol{margin:8px 0 8px 24px;padding:0}
+  li{margin:4px 0}
+  code{background:#eef3fb;padding:2px 6px;border-radius:3px;
+       font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--primary-dark)}
+  pre{background:#1f2d3d;color:#e6e6e6;padding:14px;border-radius:6px;overflow-x:auto;font-size:13px}
+  pre code{background:transparent;color:inherit;padding:0}
+  .note{background:#eef5ff;border-left:4px solid var(--primary);padding:12px 16px;
+        margin:12px 0;border-radius:0 4px 4px 0;font-size:14px}
+  .warn{background:#fff4e0;border-left:4px solid var(--warn);padding:12px 16px;
+        margin:12px 0;border-radius:0 4px 4px 0;font-size:14px}
+  .danger{background:#fdecea;border-left:4px solid var(--danger);padding:12px 16px;
+          margin:12px 0;border-radius:0 4px 4px 0;font-size:14px}
+  .ok{background:#e6f4ec;border-left:4px solid var(--ok);padding:12px 16px;
+      margin:12px 0;border-radius:0 4px 4px 0;font-size:14px}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+  figure{margin:16px 0;text-align:center}
+  figure img{max-width:100%;border:1px solid var(--border);border-radius:6px}
+  figure.placeholder{background:#fff7e6;border:2px dashed #f0b429;
+                     border-radius:8px;padding:20px}
+  figure.placeholder .img-tip{color:var(--warn);font-weight:600;font-size:13px}
+  figure figcaption{margin-top:8px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="crumb"><a href="规范总览.html">🏠 知识库首页</a> &nbsp;›&nbsp; 04 版本发布</div>
+  <h1>04 · 版本与发布规范</h1>
+  <div class="meta">适用范围:上位机软件 / 下位机固件 / 云端服务</div>
+</header>
+
+<main>
+
+  <div class="card">
+    <h2>1. 诊断包命名规范(新软件首发)</h2>
+    <ul>
+      <li>必须使用<b>规范名称</b>。</li>
+      <li>若产品有<b>官方英文名</b>,请优先采用。</li>
+    </ul>
+    <div class="danger">
+      <b>⛔ 禁止</b>:在未确认是否存在官方英文名前,直接使用拼音命名。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. 版本号规范</h2>
+
+    <h3>2.1 递增规则</h3>
+    <table>
+      <tr><th width="22%">递增粒度</th><th width="30%">适用范围</th><th>示例</th></tr>
+      <tr>
+        <td><span class="ok" style="padding:2px 8px;border-radius:3px">+0.1</span></td>
+        <td>面向<b>所有客户</b>的正式软件版本</td>
+        <td><code>v1.20 → v1.30</code></td>
+      </tr>
+      <tr>
+        <td><span class="warn" style="padding:2px 8px;border-radius:3px">+0.01</span></td>
+        <td>仅用于发给<b>特定客户</b>的内部测试版本</td>
+        <td><code>v1.20 → v1.21</code></td>
+      </tr>
+    </table>
+    <div class="danger">
+      <b>⛔ 禁止</b>:将 <code>+0.01</code> 用于<b>通用版本</b>。
+    </div>
+
+    <h3>2.2 版本号核对流程</h3>
+    <div class="warn">
+      <b>⚠ 确定流程前必须</b>登录
+      <a href="http://120.76.60.213:7006/#/SoftVersion" target="_blank">http://120.76.60.213:7006/#/SoftVersion</a>
+      查询当前软件包<b>最新版本</b>。<br>
+      禁止出现 OA 流程中版本号<b>低于已挂网版本号</b>的情况。
+    </div>
+
+    <figure>
+      <img src="images/04-soft-version.png" alt="软件版本查询页面截图">
+      <figcaption>图 2-1:挂网版本查询入口与核对要点</figcaption>
+    </figure>
+  </div>
+
+  <div class="card">
+    <h2>3. OA 标题规范</h2>
+
+    <h3>3.1 基本格式</h3>
+    <div class="note">
+      以
+      <a href="http://120.76.60.213:7006/#/SoftVersion" target="_blank">软件包管理</a>
+      中的<b>"软件包名称"</b> + <b>版本号</b> 组合。
+    </div>
+
+    <h3>3.2 示例</h3>
+    <pre><code>诊断--一汽解放V21.80
+后处理--恒和V21.10</code></pre>
+
+    <h3>3.3 备注规则(标题中追加)</h3>
+    <table>
+      <tr><th width="28%">场景</th><th>备注格式</th></tr>
+      <tr><td>软件首次发行</td><td>加备注 <code>(首发)</code></td></tr>
+      <tr><td>新增语言</td><td>加备注 <code>(XX语言/几种语言首发)</code></td></tr>
+      <tr><td>测试版</td><td>加备注 <code>(测试版)</code></td></tr>
+      <tr><td>单产品、单种类型软件包发布</td><td>加备注 <code>(DG)</code> / <code>(G3)</code> / <code>(LS)</code> 等</td></tr>
+    </table>
+
+    <div class="note">
+      <b>📚 其他规范详见</b>:
+      <a href="https://wiki.iinplus.com:8090/pages/viewpage.action?pageId=18909916" target="_blank">
+        Wiki - 软件发布 OA 流程规范
+      </a>
+    </div>
+
+    <figure>
+      <img src="images/04-oa-form.png" alt="OA 流程发起页面截图">
+      <figcaption>图 3-1:OA 单填写示例,标注"软件包名称 + 版本号 + 备注"位置</figcaption>
+    </figure>
+  </div>
+
+  <div class="card">
+    <h2>4. OA 流程必须包含的下载信息</h2>
+    <div class="warn">
+      <b>⚠ OA 流程中必须给出</b>软件包下载网址和<b>包名、版本名</b>。
+    </div>
+    <h3>4.1 示例</h3>
+<pre><code>软件包下载路径:研发软件·版本管理平台
+
+诊断--陕汽重卡
+  TD_SHANQI_V21_40_CN.zip
+  PD_SHANQI_V21_40_CN.zip
+
+诊断--陕汽新能源
+  TD_SHANQIDEV_V5_10_CN.zip
+  PD_SHANQIDEV_V5_10_CN.zip</code></pre>
+  </div>
+
+  <div class="card">
+    <h2>5. 提交 OA 流程前的自测</h2>
+    <div class="danger">
+      <b>⛔ 必须先自测</b>:提交 OA 流程前,必须到上述网站下载<b>最新软件包</b>并自测。
+    </div>
+    <h3>5.1 自测检查项</h3>
+    <ul>
+      <li>软件能正常进入(启动无异常)</li>
+      <li>各功能不会闪退</li>
+      <li>文本显示正常,无乱码</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>6. 流程速记</h2>
+    <ol>
+      <li>查询挂网最新版本 → 确定本版版本号(<code>+0.1</code> / <code>+0.01</code>)。</li>
+      <li>按官方英文名(或规范名)命名软件包,<b>禁用拼音</b>。</li>
+      <li>按"软件包名称 + 版本号 + 备注"组合 OA 标题。</li>
+      <li>提交 OA,等待测试 / 审批。</li>
+      <li>审批通过后挂网,完成版本发布。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>7. 变更记录</h2>
+    <table>
+      <tr><th>日期</th><th>修改人</th><th>内容</th></tr>
+      <tr><td>2026-06-22</td><td>CLOVEN</td><td>初始模板</td></tr>
+      <tr><td>2026-06-22</td><td>CLOVEN</td><td>补充:诊断包命名、版本号、OA 标题规范</td></tr>
+    </table>
+  </div>
+
+</main>
+
+<footer>© 汽车诊断软件开发团队 · 内部资料</footer>
+</body>
+</html>

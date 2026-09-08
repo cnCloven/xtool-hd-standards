@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05 - 团队协作与文档</title>
+<style>
+  :root{--primary:#0b5cad;--primary-dark:#073d75;--bg:#f6f8fb;--card:#fff;
+        --border:#dde3ec;--text:#1f2d3d;--muted:#6b7a90;--warn:#d98014}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;
+       color:var(--text);background:var(--bg);line-height:1.75;font-size:15px}
+  header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;
+         padding:20px 40px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+  header .crumb{font-size:12px;opacity:.85}
+  header .crumb a{color:#fff;text-decoration:underline}
+  header h1{margin:6px 0 0;font-size:22px}
+  header .meta{opacity:.9;font-size:13px;margin-top:4px}
+  main{max-width:1000px;margin:20px auto;padding:0 24px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:8px;
+        padding:32px 28px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{color:var(--primary-dark);border-bottom:2px solid var(--primary);padding-bottom:8px;
+     margin-top:0;font-size:20px}
+  h3{color:var(--primary);margin-top:28px;font-size:17px}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0;padding-left:24px}
+  li{margin:6px 0}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+  th{background:#eef3fb;color:var(--primary-dark);font-weight:600}
+  tr:nth-child(even){background:#fafbfd}
+  code{background:#eef3fb;color:var(--primary-dark);padding:2px 6px;border-radius:4px;
+       font-family:Consolas,"Courier New",monospace;font-size:13px}
+  .purpose{background:#fff8ec;border-left:4px solid var(--warn);padding:12px 16px;
+           border-radius:4px;margin:16px 0;color:#7a4a00}
+  .danger{background:#fdecea;border-left:4px solid #c0392b;padding:12px 16px;
+          margin:12px 0;border-radius:0 4px 4px 0;font-size:14px}
+  .note{background:#eef5ff;border-left:4px solid var(--primary-dark);padding:12px 16px;
+        margin:12px 0;border-radius:0 4px 4px 0;font-size:14px}
+  figure{margin:16px 0;text-align:center}
+  figure img{max-width:100%;border:1px solid var(--border);border-radius:6px}
+  figure figcaption{margin-top:8px;font-size:13px;color:var(--muted)}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <div class="crumb"><a href="规范总览.html">🏠 知识库首页</a> &nbsp;›&nbsp; 05 团队协作与文档</div>
+  <h1>05 · 团队协作与文档规范</h1>
+</header>
+
+<main>
+
+  <div class="card">
+    <h2>车系品牌开发跟进表规范</h2>
+
+    <div class="purpose">
+      <strong>目的：</strong>为确保后续能用通用的脚本读取所有品牌的跟进表，特做以下规范。
+    </div>
+
+    <h3>1. 第一张工作表 —— ECU总表</h3>
+    <ul>
+      <li>工作表名称<b>必须</b>为 <code>ECU总表</code>。</li>
+      <li>内容：当前车系所有诊断内容。</li>
+      <li>列名如下（后面按需新增列）：</li>
+    </ul>
+    <div class="danger"><b>⛔ 禁止</b>：使用 <code>sheet1</code> 或其他名称。脚本按表名 <code>ECU总表</code> 读取。</div>
+    <table>
+      <thead>
+        <tr><th>列名</th><th>描述</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Brand</td><td>品牌</td></tr>
+        <tr><td>Model</td><td>车型</td></tr>
+        <tr><td>System</td><td>系统</td></tr>
+        <tr><td>Ecu</td><td>ECU</td></tr>
+        <tr><td>Protocol</td><td>诊断协议</td></tr>
+        <tr><td>pin</td><td>诊断针脚</td></tr>
+        <tr><td>baudrate</td><td>波特率</td></tr>
+        <tr><td>reqID</td><td>请求ID</td></tr>
+        <tr><td>resID</td><td>响应ID</td></tr>
+        <tr><td>开发情况</td><td>开发状态</td></tr>
+      </tbody>
+    </table>
+    <figure>
+      <img src="images/ECU总表.jpg" alt="ECU总表填写示例">
+      <figcaption>图 1-1:ECU总表填写示例（表名必须为 ECU总表；列可按需向后扩展）</figcaption>
+    </figure>
+
+    <h3>2. 第二张工作表 —— 项目计划</h3>
+    <ul>
+      <li>工作表名称<b>必须</b>为 <code>项目计划</code>。</li>
+      <li>内容：开发任务拆分。</li>
+      <li>列名如下（后面按需新增列）：</li>
+    </ul>
+    <div class="danger"><b>⛔ 禁止</b>：使用 <code>sheet2</code> 或其他名称。脚本按表名 <code>项目计划</code> 读取。</div>
+    <table>
+      <thead>
+        <tr><th>列名</th><th>描述</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>序号</td><td>任务序号</td></tr>
+        <tr><td>内容</td><td>任务描述</td></tr>
+        <tr><td>负责人</td><td>负责人姓名</td></tr>
+        <tr><td>截止时间</td><td>YYYY-MM-DD</td></tr>
+        <tr><td>开发状态</td><td>任务开发状态；必须使用固定分类，便于筛选</td></tr>
+        <tr><td>版本号</td><td>对应软件版本号</td></tr>
+      </tbody>
+    </table>
+    <figure>
+      <img src="images/项目计划.jpg" alt="项目计划填写示例">
+      <figcaption>图 2-1:项目计划填写示例（表名必须为 项目计划；列可按需向后扩展）</figcaption>
+    </figure>
+
+    <h3>3. 第三张工作表 —— 特殊功能跟进表</h3>
+    <ul>
+      <li>工作表名称<b>必须</b>为 <code>特殊功能</code>。</li>
+      <li>内容：所有特殊功能清单。</li>
+      <li>列名如下（后面按需新增列）：</li>
+    </ul>
+    <div class="danger"><b>⛔ 禁止</b>：使用其他名称。脚本按表名 <code>特殊功能</code> 读取。</div>
+    <table>
+      <thead>
+        <tr><th>列名</th><th>描述</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>车系</td><td>车系</td></tr>
+        <tr><td>车型</td><td>车型</td></tr>
+        <tr><td>系统</td><td>系统</td></tr>
+        <tr><td>ECU</td><td>ECU</td></tr>
+        <tr><td>功能名</td><td>特殊功能名称</td></tr>
+        <tr><td>底层索引</td><td>用于开发者快速定位该功能在底层文件的位置</td></tr>
+        <tr><td>工程索引</td><td>用于开发者快速定位该功能在开发项目文件的位置</td></tr>
+        <tr><td>开发情况</td><td>开发状态；必须使用固定分类，便于筛选</td></tr>
+        <tr><td>版本号</td><td>对应软件版本号</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4. 后续工作表</h3>
+    <ul>
+      <li>第四张及以后可按需补充其他信息。</li>
+      <li>不得占用 <code>ECU总表</code> / <code>项目计划</code> / <code>特殊功能</code> 三个固定名称。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>变更记录</h2>
+    <table>
+      <tr><th>日期</th><th>修改人</th><th>内容</th></tr>
+      <tr><td>2026-09-08</td><td>CLOVEN</td><td>表名限定为 ECU总表 / 项目计划 / 特殊功能；新增特殊功能跟进表列规范</td></tr>
+      <tr><td>2026-09-08</td><td>CLOVEN</td><td>补充 ECU总表、项目计划填写示例图</td></tr>
+      <tr><td>2026-09-08</td><td>CLOVEN</td><td>项目计划新增列：开发状态、版本号</td></tr>
+    </table>
+  </div>
+
+</main>
+
+<footer>© 汽车诊断软件开发团队 · 内部资料</footer>
+</body>
+</html>

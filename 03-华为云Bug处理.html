@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 - 华为云 Bug 处理</title>
+<style>
+  :root{--primary:#0b5cad;--primary-dark:#073d75;--bg:#f6f8fb;--card:#fff;
+        --border:#dde3ec;--text:#1f2d3d;--muted:#6b7a90;--warn:#d98014;
+        --ok:#1a8a3f;--danger:#c0392b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;
+       color:var(--text);background:var(--bg);line-height:1.75;font-size:15px}
+  header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;
+         padding:20px 40px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+  header .crumb{font-size:12px;opacity:.85}
+  header .crumb a{color:#fff;text-decoration:underline}
+  header h1{margin:6px 0 0;font-size:22px}
+  header .meta{opacity:.9;font-size:13px;margin-top:4px}
+  main{max-width:1000px;margin:20px auto;padding:0 24px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:8px;
+        padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{color:var(--primary-dark);border-bottom:2px solid var(--primary);padding-bottom:8px;
+     margin-top:0;font-size:19px}
+  h3{color:var(--primary-dark);font-size:16px;margin-top:18px;margin-bottom:6px}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top}
+  th{background:#eef3fb;color:var(--primary-dark)}
+  tr:nth-child(even) td{background:#fafbfd}
+  a{color:var(--primary);text-decoration:none;word-break:break-all}
+  a:hover{text-decoration:underline}
+  ul,ol{margin:8px 0 8px 24px;padding:0}
+  li{margin:6px 0}
+  code{background:#eef3fb;padding:2px 6px;border-radius:3px;
+       font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--primary-dark)}
+  .note{background:#eef5ff;border-left:4px solid var(--primary);padding:12px 16px;
+        margin:12px 0;border-radius:0 4px 4px 0;font-size:14px}
+  .warn{background:#fff4e0;border-left:4px solid var(--warn);padding:12px 16px;
+        margin:12px 0;border-radius:0 4px 4px 0;font-size:14px}
+  .ok{background:#e6f4ec;border-left:4px solid var(--ok);padding:12px 16px;
+      margin:12px 0;border-radius:0 4px 4px 0;font-size:14px}
+  .danger{background:#fdecea;border-left:4px solid var(--danger);padding:12px 16px;
+          margin:12px 0;border-radius:0 4px 4px 0;font-size:14px}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <div class="crumb"><a href="规范总览.html">🏠 知识库首页</a> &nbsp;›&nbsp; 03 华为云 Bug 处理</div>
+  <h1>03 · 华为云 Bug 处理规范</h1>
+</header>
+
+<main>
+
+  <div class="card">
+    <h2>1. Bug 推进要求</h2>
+    <div class="ok">
+      <b>✓ 所有可解决的 Bug</b>,务必推进至<b>实现</b>或<b>测试</b>节点,不得长期停留在
+      "新建 / 待处理 / 待分派"等中间状态。
+    </div>
+    <ul>
+      <li>已确认可解决的 Bug:推进至<b>实现</b>节点(开发修复中)。</li>
+      <li>已修复的 Bug:推进至<b>测试</b>节点(待验证)。</li>
+      <li>禁止将可解决 Bug 长期挂起或随意关闭。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>2. 每月正式版 OA 软测流程</h2>
+    <div class="warn">
+      <b>⏰ 时间节点</b>:每月 <b>10 日左右</b>,需发正式版关闭的车系<b>统一</b>提交 OA 软测流程,
+      走<b>免测</b>通道。
+    </div>
+    <h3>2.1 操作要点</h3>
+    <ul>
+      <li>梳理当月需关闭的车系清单。</li>
+      <li>按车系统一打包,提交 OA 软件测试流程。</li>
+      <li>勾选<b>免测</b>选项,附版本号 / 包名 / 下载路径(详见 <a href="04-版本发布.html">04 版本与发布规范</a>)。</li>
+      <li>跟进 OA 审批,确认挂网完成。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>3. Bug 转需求流程</h2>
+    <div class="note">
+      涉及<b>未开发的功能</b>,不得当作 Bug 处理。须走 <b>Bug 转需求</b>流程。
+    </div>
+    <h3>3.1 操作指引</h3>
+    <p>
+      详细步骤见 Wiki 目录索引 <b>售后中心操作指引 → 诊断 Bug 转需求步骤</b>:<br>
+      <a href="http://wiki.iinplus.com:8090/pages/viewpage.action?pageId=85393812#id-3.%E5%94%AE%E5%90%8E%E4%B8%AD%E5%BF%83%E6%93%8D%E4%BD%9C%E6%8C%87%E5%BC%95-%E8%AF%8A%E6%96%ADBug%E8%BD%AC%E9%9C%80%E6%B1%82%E6%AD%A5%E9%AA%A4" target="_blank">
+        http://wiki.iinplus.com:8090/pages/viewpage.action?pageId=85393812#…
+      </a>
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>4. 变更记录</h2>
+    <table>
+      <tr><th>日期</th><th>修改人</th><th>内容</th></tr>
+      <tr><td>2026-06-22</td><td>CLOVEN</td><td>补充:Bug 推进要求、每月 OA 软测流程、Bug 转需求流程</td></tr>
+    </table>
+  </div>
+
+</main>
+
+<footer>© 汽车诊断软件开发团队 · 内部资料</footer>
+</body>
+</html>
