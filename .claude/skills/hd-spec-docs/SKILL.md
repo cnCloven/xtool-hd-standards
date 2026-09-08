@@ -25,8 +25,8 @@ HTML 是规范的**唯一源文件**。PDF 是打包产物，禁止反向从 PDF
 01-编码规范.html       章节，文件名 NN-短标题.html
 …06-入职和离职.html
 templates/             可复制填写的空白件（如项目交接模板；不要打进规范 PDF）
-images/                截图源文件（HTML 用相对路径引用）
-backup/                往期 PDF 归档（每次新打包后由脚本移入）
+images/                截图源文件（本地目录，不入库；HTML 用相对路径引用）
+backup/                往期 PDF 归档（本地目录，不入库）
 柴油日常开发规范_YYYYMMDD_HHMMSS.pdf  当前对外分发的合并 PDF
 tools/build_pdf.py     合并 HTML、编码图片、Chromium 打印 PDF
 tools/embed_images.py  仅在需要「单文件 HTML」时才把图烤进源文件

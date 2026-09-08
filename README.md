@@ -91,11 +91,9 @@ HTML 约定、章节模板也在该 skill 目录里，由 skill 自己读取，�
 规范总览.html                 封面 + 章节索引
 01-编码规范.html … 06-*.html  各章源文件
 templates/                    可复制填写的空白件（不打进规范 PDF）
-images/                       截图原图（HTML 用相对路径引用）
 柴油日常开发规范_时间戳.pdf     当前对外分发的合并 PDF
-backup/                       往期 PDF
 .claude/skills/hd-spec-docs/  维护 skill（优先走这里）
 tools/build_pdf.py            skill 调用的打包脚本
 ```
 
-`.gitignore` 已排除本机权限文件、`build/` 中间产物和 `__pycache__/`。
+`.gitignore` 已排除：`images/`、`backup/`、`gitignore/`（本地草稿）、`build/`、本机权限文件。截图和往期 PDF 只留在本机，打包时仍从本地 `images/` 读取。
