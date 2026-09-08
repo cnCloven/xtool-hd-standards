@@ -19,7 +19,7 @@ import sys
 import time
 from pathlib import Path
 from typing import List, Optional, Tuple
-from urllib.parse import unquote
+from urllib.parse import unquote, urlparse
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -104,17 +104,21 @@ figure figcaption{margin-top:8px;font-size:13px;color:var(--muted)}
 .legend .s{font-size:12px;display:inline-block;padding:2px 8px;border-radius:10px;
            background:#eef3fb;color:var(--primary-dark)}
 .legend .s.wip{background:#fff4e0;color:var(--warn)}
+.core-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.core-item{border:1px solid var(--border);border-radius:6px;padding:12px 14px;background:#fbfcfe}
+.core-item .k{font-size:12px;color:var(--muted);font-weight:700}
+.core-item .v{margin-top:4px;font-weight:600;color:var(--primary-dark)}
 
 @page{size:A4;margin:12mm 10mm 16mm 10mm}
 @media print{
   html,body{background:#fff}
   header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .note,.warn,.danger,.ok,.purpose,th,pre,code,.toc-item,.card{
+  .note,.warn,.danger,.ok,.purpose,th,pre,code,.toc-item,.card,.core-item{
     -webkit-print-color-adjust:exact;print-color-adjust:exact}
   .chapter{break-before:page}
   .chapter.cover{break-before:auto}
   h2,h3,h4,header{break-after:avoid}
-  figure,pre,table{break-inside:avoid}
+  figure,pre,table,.core-grid{break-inside:avoid}
   figure img{max-height:170mm;object-fit:contain}
   a.toc-item{text-decoration:none}
 }
@@ -195,7 +199,11 @@ def rewrite_internal_links(html: str) -> str:
         mm = CHAPTER_NAME_RE.match(file)
         if mm:
             return f'href="#sec-{mm.group(1)}"'
-        return m.group(0)
+        # 仓库内其它文件（如 templates/*.html）：从 build/bundle.html 出发要先回到仓库根
+        orig = href.replace("\\", "/")
+        if orig.startswith("../"):
+            return f'href="{orig}"'
+        return f'href="../{orig}"'
 
     return pattern.sub(repl, html)
 
@@ -328,6 +336,64 @@ def print_pdf(bundle_path: Path, pdf_path: Path, page_format: str) -> None:
         browser.close()
 
 
+def file_uri_to_path(uri: str) -> Optional[Path]:
+    try:
+        parsed = urlparse(uri)
+    except Exception:
+        return None
+    if parsed.scheme != "file":
+        return None
+    path = unquote(parsed.path)
+    if os.name == "nt" and re.match(r"^/[A-Za-z]:", path):
+        path = path[1:]
+    if not path:
+        return None
+    return Path(path)
+
+
+def relativize_local_file_links(writer, pdf_path: Path, repo_root: Path) -> List[str]:
+    """Turn Chromium's file:///E:/... URIs into paths relative to the PDF file."""
+    from pypdf.generic import DictionaryObject, NameObject, create_string_object
+
+    pdf_dir = pdf_path.resolve().parent
+    repo_root = repo_root.resolve()
+    rewritten = []
+    for page in writer.pages:
+        annots = page.get("/Annots")
+        if not annots:
+            continue
+        for annot in annots:
+            obj = annot.get_object()
+            action = obj.get("/A")
+            if action is None:
+                continue
+            action = action.get_object()
+            uri = action.get("/URI")
+            if not uri:
+                continue
+            uri_s = str(uri)
+            target = file_uri_to_path(uri_s)
+            if target is None:
+                continue
+            try:
+                target = target.resolve()
+                target.relative_to(repo_root)
+                rel = Path(os.path.relpath(target, pdf_dir)).as_posix()
+            except (OSError, ValueError):
+                continue
+            new_action = DictionaryObject()
+            new_action[NameObject("/Type")] = NameObject("/Action")
+            new_action[NameObject("/S")] = NameObject("/Launch")
+            fs = DictionaryObject()
+            fs[NameObject("/Type")] = NameObject("/Filespec")
+            fs[NameObject("/F")] = create_string_object(rel)
+            fs[NameObject("/UF")] = create_string_object(rel)
+            new_action[NameObject("/F")] = fs
+            obj[NameObject("/A")] = new_action
+            rewritten.append(rel)
+    return rewritten
+
+
 def dest_page_index(reader, name: str) -> Optional[int]:
     nd = reader.named_destinations or {}
     dest = nd.get(name) or nd.get("/" + name)
@@ -356,7 +422,7 @@ def dest_page_index(reader, name: str) -> Optional[int]:
     return None
 
 
-def polish_pdf(pdf_path: Path, outline: List[Tuple[str, str]]) -> None:
+def polish_pdf(pdf_path: Path, outline: List[Tuple[str, str]], repo_root: Path) -> None:
     try:
         from pypdf import PdfReader, PdfWriter
     except ImportError:
@@ -366,6 +432,11 @@ def polish_pdf(pdf_path: Path, outline: List[Tuple[str, str]]) -> None:
     reader = PdfReader(str(pdf_path))
     writer = PdfWriter()
     writer.append(reader)
+    rewritten = relativize_local_file_links(writer, pdf_path, repo_root)
+    if rewritten:
+        print("相对文件跳转:")
+        for rel in rewritten:
+            print("  ", rel)
     writer.add_metadata(
         {
             "/Title": DOC_TITLE,
@@ -516,7 +587,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     pdf_path = root / out_name
     print("正在用 Chromium 打印 PDF …")
     print_pdf(bundle_path, pdf_path, args.format)
-    polish_pdf(pdf_path, outline)
+    polish_pdf(pdf_path, outline, root)
     print("已生成", pdf_path, f"({pdf_path.stat().st_size} bytes)")
     archive_previous_pdfs(root, pdf_path)
 

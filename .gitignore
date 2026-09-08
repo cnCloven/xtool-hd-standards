@@ -2,6 +2,7 @@
 **/__pycache__/
 *.pyc
 build/
+gitignore/
 Thumbs.db
 Desktop.ini
 .DS_Store
