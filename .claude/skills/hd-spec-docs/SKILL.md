@@ -23,7 +23,8 @@ HTML 是规范的**唯一源文件**。PDF 是打包产物，禁止反向从 PDF
 ```
 规范总览.html          封面 + 文档索引（TOC 卡片）
 01-编码规范.html       章节，文件名 NN-短标题.html
-…06-新人入职.html
+…07-离职交接.html
+templates/             可复制填写的空白件（如项目交接模板；不要打进规范 PDF）
 images/                截图源文件（HTML 用相对路径引用）
 backup/                往期 PDF 归档（每次新打包后由脚本移入）
 柴油日常开发规范_YYYYMMDD_HHMMSS.pdf  当前对外分发的合并 PDF

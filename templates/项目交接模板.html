@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>项目交接文档</title>
+  <style>
+    :root {
+      --ink: #4a4a46;
+      --muted: #8a8680;
+      --hint: #9a958e;
+      --line: #e6e2dc;
+      --navy: #6b8499;
+      --navy-2: #8aa0b3;
+      --gold: #c4a574;
+      --paper: #fff;
+      --fill: #f8f7f4;
+      --page-bg: #f3f1ed;
+      --head-bg: #eef2f5;
+      --head-text: #5a6d80;
+      --focus: #8aa0b3;
+      --ok: #6a9b78;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--page-bg);
+      color: var(--ink);
+      font-family: "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Heiti SC", sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: #f7f6f3;
+      color: var(--head-text);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .toolbar .brand {
+      font-weight: 700;
+      letter-spacing: .08em;
+      margin-right: auto;
+    }
+
+    .save-status {
+      font-size: 12px;
+      opacity: .85;
+    }
+
+    .toolbar button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--head-text);
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+    }
+
+    .toolbar button:hover { background: var(--head-bg); }
+    .toolbar button.primary { background: #e8e4d8; border-color: #ddd6c8; color: var(--ink); font-weight: 700; }
+    .toolbar button.primary:hover { background: #ddd6c8; }
+
+    .sheet {
+      width: 210mm;
+      max-width: 100%;
+      margin: 24px auto 48px;
+      background: var(--paper);
+      box-shadow: 0 4px 20px rgba(90, 86, 80, .08);
+    }
+
+    /* ---------- Cover ---------- */
+    .cover {
+      min-height: 297mm;
+      padding: 28mm 22mm 20mm;
+      display: flex;
+      flex-direction: column;
+      border-top: 6px solid #d4dde5;
+      position: relative;
+    }
+
+    .cover-mark {
+      position: absolute;
+      top: 18mm;
+      right: 22mm;
+      font-size: 12px;
+      letter-spacing: .3em;
+      color: var(--gold);
+      border: 1px solid #e6d7be;
+      padding: 2px 10px;
+    }
+
+    .cover-head {
+      text-align: center;
+      margin-top: 28mm;
+    }
+
+    .cover-rule {
+      height: 0;
+      border: none;
+      border-top: 1px solid #d4dde5;
+      border-bottom: 1px solid #e8eef2;
+      padding-bottom: 2px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .cover-title {
+      display: block;
+      width: 100%;
+      margin: 22px 0;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: .42em;
+      text-indent: .42em;
+      color: var(--head-text);
+      font-family: "Source Han Serif SC", "Noto Serif SC", "STSong", "SimSun", "Songti SC", serif;
+      outline: none;
+    }
+
+    .cover-title:focus { background: var(--fill); }
+
+    .cover-sub {
+      text-align: center;
+      color: var(--muted);
+      letter-spacing: .25em;
+      margin: 8px 0 0;
+      font-size: 13px;
+    }
+
+    .cover-meta {
+      width: 78%;
+      margin: 36mm auto 0;
+      border-collapse: collapse;
+    }
+
+    .cover-meta th,
+    .cover-meta td {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 8px;
+      text-align: left;
+    }
+
+    .cover-meta th {
+      width: 28%;
+      color: var(--head-text);
+      font-weight: 700;
+      letter-spacing: .2em;
+      background: transparent;
+      border-bottom-color: var(--line);
+    }
+
+    .cover-meta input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font: inherit;
+      font-size: 15px;
+      outline: none;
+      padding: 2px 4px;
+    }
+
+    .cover-meta input:focus { background: var(--fill); }
+
+    .rev-wrap {
+      margin-top: auto;
+      padding-top: 28mm;
+    }
+
+    .rev-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--head-text);
+      letter-spacing: .2em;
+      margin: 0 0 10px;
+    }
+
+    /* ---------- Body ---------- */
+    .body {
+      padding: 16mm 18mm 22mm;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      padding: 8px 12px;
+      background: var(--head-bg);
+      color: var(--head-text);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      border-left: 3px solid #c5d0dc;
+    }
+
+    .section { margin: 0 0 22px; }
+
+    .hint {
+      margin: 0 0 12px;
+      padding: 8px 12px;
+      background: #f7f5f0;
+      border-left: 3px solid #e6d7be;
+      color: var(--hint);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .item { margin: 0 0 14px; }
+
+    .item-title {
+      margin: 0 0 6px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    textarea,
+    .blank {
+      display: block;
+      width: 100%;
+      min-height: 3.4em;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      background: var(--fill);
+      font: inherit;
+      line-height: 1.7;
+      resize: vertical;
+      outline: none;
+      border-radius: 2px;
+    }
+
+    textarea:focus { border-color: var(--focus); background: #fff; box-shadow: 0 0 0 3px rgba(138, 160, 179, .18); }
+
+    table.data {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin: 0 0 8px;
+      font-size: 13px;
+    }
+
+    table.data th,
+    table.data td {
+      border: 1px solid var(--line);
+      padding: 0;
+      vertical-align: top;
+    }
+
+    table.data th {
+      background: var(--head-bg);
+      color: var(--head-text);
+      font-weight: 700;
+      text-align: center;
+      padding: 8px 6px;
+    }
+
+    table.data td input,
+    table.data td textarea {
+      width: 100%;
+      min-height: 2.6em;
+      border: none;
+      background: transparent;
+      padding: 8px 8px;
+      font: inherit;
+      resize: vertical;
+      border-radius: 0;
+    }
+
+    table.data td input:focus,
+    table.data td textarea:focus {
+      background: #f3f6f8;
+      box-shadow: none;
+    }
+
+    table.kv {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 8px;
+    }
+
+    table.kv th,
+    table.kv td {
+      border: 1px solid var(--line);
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    table.kv th {
+      width: 28%;
+      background: var(--head-bg);
+      color: var(--head-text);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    table.kv td { background: #fff; padding: 0; }
+    table.kv td input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font: inherit;
+      padding: 8px 12px;
+      outline: none;
+      min-height: 2.6em;
+    }
+    table.kv td input:focus { background: #f3f6f8; }
+
+    .add-row {
+      appearance: none;
+      border: 1px dashed #a8a29e;
+      background: transparent;
+      color: var(--muted);
+      padding: 4px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .add-row:hover { border-color: var(--navy-2); color: var(--head-text); }
+
+    .checks { list-style: none; margin: 0; padding: 0; }
+    .checks li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-bottom: none;
+      background: #fff;
+    }
+    .checks li:first-child { border-top-left-radius: 2px; border-top-right-radius: 2px; }
+    .checks li:last-child { border-bottom: 1px solid var(--line); }
+
+    .checks input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin-top: 4px;
+      accent-color: var(--navy-2);
+      flex-shrink: 0;
+    }
+
+    .lead { margin: 0 0 10px; color: var(--muted); }
+
+    @media print {
+      body { background: #fff; }
+      .toolbar, .add-row, .no-print { display: none !important; }
+      .sheet { width: auto; margin: 0; box-shadow: none; }
+      .cover {
+        min-height: auto;
+        height: 100vh;
+        page-break-after: always;
+        break-after: page;
+      }
+      h2 { break-after: avoid; }
+      .section { break-inside: avoid; }
+      table { break-inside: auto; }
+      tr { break-inside: avoid; }
+      textarea, .blank, table.kv td input, table.data td input, table.data td textarea {
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      @page { size: A4; margin: 14mm 12mm; }
+    }
+
+    .banner {
+      background: #f3eee4;
+      color: #7a6a50;
+      font-size: 13px;
+      padding: 8px 20px;
+      text-align: center;
+      border-bottom: 1px solid #ebe4d6;
+    }
+
+    @media (max-width: 900px) {
+      .sheet { margin: 0; box-shadow: none; width: 100%; }
+      .cover, .body { padding: 20px 16px; }
+      .cover { min-height: auto; }
+      .cover-title { font-size: 28px; letter-spacing: .2em; text-indent: .2em; }
+      .cover-meta { width: 100%; }
+      .toolbar { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar no-print">
+    <div class="brand">项目交接模板</div>
+    <div class="save-status" id="saveStatus">已自动保存  12:26</div>
+    <button type="button" onclick="saveToFile()" class="primary">保存到文件</button>
+    <button type="button" onclick="printDoc()">打印 / 导出 PDF</button>
+    <button type="button" onclick="exportJson()">导出备份</button>
+    <button type="button" onclick="importJson()">导入备份</button>
+    <button type="button" onclick="resetDoc()">清空</button>
+  </div>
+  <div class="banner no-print" id="banner">
+    浏览器里填写的内容只存在这台电脑。发给同事前，请点右上角「保存到文件」，把下载下来的 HTML 发出去（或打印成 PDF）。
+  </div>
+
+  <div class="sheet" id="sheet">
+    <!-- 封面 -->
+    <section class="cover">
+      <div class="cover-mark">内部资料</div>
+      <div class="cover-head">
+        <hr class="cover-rule">
+        <input class="cover-title" name="docTitle" value="项目交接文档" maxlength="30">
+        <hr class="cover-rule">
+        <p class="cover-sub">试行模板　V1.0</p>
+      </div>
+
+      <table class="cover-meta">
+        <tbody><tr>
+          <th>部　门</th>
+          <td><input name="dept" placeholder="请填写部门名称" value="HD"></td>
+        </tr>
+        <tr>
+          <th>编 写 人</th>
+          <td><input name="author" placeholder="请填写编写人" value="周紫欣"></td>
+        </tr>
+        <tr>
+          <th>编写日期</th>
+          <td><input type="date" name="writeDate" value="2026-09-08"></td>
+        </tr>
+        <tr>
+          <th>审 核 人</th>
+          <td><input name="reviewer" placeholder="请填写审核人" value="黄灿"></td>
+        </tr>
+      </tbody></table>
+
+      <div class="rev-wrap">
+        <div class="rev-title">修改记录</div>
+        <table class="data" data-name="revision">
+          <thead>
+            <tr>
+              <th style="width:16%">版本号</th>
+              <th style="width:44%">修改内容</th>
+              <th style="width:20%">修改人</th>
+              <th style="width:20%">修改日期</th>
+            </tr>
+          </thead>
+          <tbody><tr>
+              <td><input value="V1.0"></td>
+              <td><input value="初版发布，建立项目交接模板"></td>
+              <td><input value="周紫欣"></td>
+              <td><input type="date" value="2026-09-08"></td>
+            </tr><tr>
+              <td><input value=""></td>
+              <td><input value=""></td>
+              <td><input value=""></td>
+              <td><input type="date" value=""></td>
+            </tr><tr>
+              <td><input value=""></td>
+              <td><input value=""></td>
+              <td><input value=""></td>
+              <td><input type="date" value=""></td>
+            </tr></tbody>
+        </table>
+        <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
+      </div>
+    </section>
+
+    <!-- 正文 -->
+    <div class="body">
+      <section class="section">
+        <h2>一、交接基础信息</h2>
+        <table class="kv">
+          <tbody><tr>
+            <th>交接人</th>
+            <td><input name="fromPerson" value=""></td>
+          </tr>
+          <tr>
+            <th>接收人</th>
+            <td><input name="toPerson" value=""></td>
+          </tr>
+          <tr>
+            <th>主管负责人</th>
+            <td><input name="supervisor" value=""></td>
+          </tr>
+          <tr>
+            <th>交接涉及项目</th>
+            <td><input name="projectName" value=""></td>
+          </tr>
+          <tr>
+            <th>交接启动日期</th>
+            <td><input type="date" name="startDate" value=""></td>
+          </tr>
+          <tr>
+            <th>计划交接完成日期</th>
+            <td><input type="date" name="endDate" value=""></td>
+          </tr>
+        </tbody></table>
+      </section>
+
+      <section class="section">
+        <h2>二、项目全貌交接（背景与整体概况）</h2>
+        <p class="hint">填写提示：说明项目由来、业务目标、覆盖范围、相关干系人，帮助接收人快速建立项目全局认知。</p>
+
+        <div class="item">
+          <div class="item-title">1. 项目业务背景与立项初衷：</div>
+          <textarea name="s2_1" rows="2"></textarea>
+        </div>
+        <div class="item">
+          <div class="item-title">2. 项目核心目标与预期交付成果：</div>
+          <textarea name="s2_2" rows="2"></textarea>
+        </div>
+        <div class="item">
+          <div class="item-title">3. 项目整体范围与约束条件（时间、预算、业务限制等）：</div>
+          <textarea name="s2_3" rows="2"></textarea>
+        </div>
+        <div class="item">
+          <div class="item-title">4. 干系人清单：内部对接同事、业务方、客户、合作供应商，说明每个人的角色与主要诉求：</div>
+          <textarea name="s2_4" rows="2"></textarea>
+        </div>
+        <div class="item">
+          <div class="item-title">5. 关键历史里程碑、重要决策记录：</div>
+          <textarea name="s2_5" rows="2"></textarea>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>三、项目进度交接（当前现状与后续任务）</h2>
+        <p class="hint">填写提示：梳理已完成工作、当前所处阶段、未完成任务、工作卡点及待决策事项。</p>
+
+        <div class="item">
+          <div class="item-title">1. 项目当前所处阶段：</div>
+          <textarea name="s3_1" rows="2"></textarea>
+        </div>
+        <div class="item">
+          <div class="item-title">2. 已完成工作与已验收成果：</div>
+          <textarea name="s3_2" rows="2"></textarea>
+        </div>
+        <div class="item">
+          <div class="item-title">3. 尚未完成工作任务清单</div>
+          <table class="data" data-name="todo">
+            <thead>
+              <tr>
+                <th style="width:32%">任务简述</th>
+                <th style="width:22%">计划完成时间</th>
+                <th style="width:22%">前置依赖</th>
+                <th style="width:24%">备注</th>
+              </tr>
+            </thead>
+            <tbody><tr>
+                <td><input value=""></td>
+                <td><input type="date" value=""></td>
+                <td><input value=""></td>
+                <td><input value=""></td>
+              </tr><tr>
+                <td><input value=""></td>
+                <td><input type="date" value=""></td>
+                <td><input value=""></td>
+                <td><input value=""></td>
+              </tr><tr>
+                <td><input value=""></td>
+                <td><input type="date" value=""></td>
+                <td><input value=""></td>
+                <td><input value=""></td>
+              </tr><tr>
+                <td><input value=""></td>
+                <td><input type="date" value=""></td>
+                <td><input value=""></td>
+                <td><input value=""></td>
+              </tr></tbody>
+          </table>
+          <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
+        </div>
+        <div class="item">
+          <div class="item-title">4. 后续重点工作计划、排期安排：</div>
+          <textarea name="s3_4" rows="2"></textarea>
+        </div>
+        <div class="item">
+          <div class="item-title">5. 待评审、待决策卡点事项（写明卡点原因、决策责任人）：</div>
+          <p class="hint">填写提示：记录目前悬而未决、需要评审或领导拍板才能继续推进的事项；务必写清楚：卡点事项、卡住的原因、需要找谁做决策。</p>
+          <textarea name="s3_5" rows="2"></textarea>
+        </div>
+        <div class="item">
+          <div class="item-title">6. 重要沟通记录、会议纪要存放位置：</div>
+          <p class="hint">填写提示：填写会议纪要、客户沟通记录的云盘 / 知识库完整路径、链接；标注关键纪要文件名称，方便接收人追溯历史约定。</p>
+          <textarea name="s3_6" rows="2"></textarea>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>四、项目资源交接（文档、权限、物料、外部资源）</h2>
+        <p class="hint">填写提示：明确所有资源存放路径、账号信息、对接联系人，保证接收人可直接查找、复用所有项目资源。</p>
+
+        <div class="item">
+          <div class="item-title">1. 项目文档资料：需求、方案、汇报材料、复盘文档等，注明存储路径、重要版本说明：</div>
+          <textarea name="s4_1" rows="2"></textarea>
+        </div>
+        <div class="item">
+          <div class="item-title">2. 系统、平台账号权限清单</div>
+          <table class="data" data-name="accounts">
+            <thead>
+              <tr>
+                <th style="width:26%">系统/平台名称</th>
+                <th style="width:26%">账号信息</th>
+                <th style="width:24%">权限说明</th>
+                <th style="width:24%">移交方式</th>
+              </tr>
+            </thead>
+            <tbody><tr>
+                <td><input value=""></td>
+                <td><input value=""></td>
+                <td><input value=""></td>
+                <td><input value=""></td>
+              </tr><tr>
+                <td><input value=""></td>
+                <td><input value=""></td>
+                <td><input value=""></td>
+                <td><input value=""></td>
+              </tr><tr>
+                <td><input value=""></td>
+                <td><input value=""></td>
+                <td><input value=""></td>
+                <td><input value=""></td>
+              </tr></tbody>
+          </table>
+          <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
+        </div>
+        <div class="item">
+          <div class="item-title">3. 项目物料资产：原型、设计源文件、配置文件、脚本等：</div>
+          <textarea name="s4_3" rows="2"></textarea>
+        </div>
+        <div class="item">
+          <div class="item-title">4. 合同、往来资料、外部合作方联系人信息：</div>
+          <textarea name="s4_4" rows="2"></textarea>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>五、现存问题与潜在风险交接</h2>
+        <p class="hint">填写提示：如实记录现存问题、历史踩坑经历、潜在风险，同步填写已执行处理动作及现有应对预案。</p>
+
+        <div class="item">
+          <div class="item-title">1. 当前现存问题清单</div>
+          <table class="data" data-name="issues">
+            <thead>
+              <tr>
+                <th style="width:22%">问题描述</th>
+                <th style="width:18%">产生原因</th>
+                <th style="width:22%">已采取处理动作</th>
+                <th style="width:16%">当前状态</th>
+                <th style="width:22%">后续建议</th>
+              </tr>
+            </thead>
+            <tbody><tr>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+              </tr><tr>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+              </tr><tr>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+              </tr></tbody>
+          </table>
+          <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
+        </div>
+        <div class="item">
+          <div class="item-title">2. 项目潜在风险清单</div>
+          <table class="data" data-name="risks">
+            <thead>
+              <tr>
+                <th style="width:28%">风险描述</th>
+                <th style="width:18%">风险等级（高/中/低）</th>
+                <th style="width:26%">可能造成影响</th>
+                <th style="width:28%">应对预案/建议</th>
+              </tr>
+            </thead>
+            <tbody><tr>
+                <td><textarea rows="2"></textarea></td>
+                <td><input value=""></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+              </tr><tr>
+                <td><textarea rows="2"></textarea></td>
+                <td><input value=""></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+              </tr><tr>
+                <td><textarea rows="2"></textarea></td>
+                <td><input value=""></td>
+                <td><textarea rows="2"></textarea></td>
+                <td><textarea rows="2"></textarea></td>
+              </tr></tbody>
+          </table>
+          <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
+        </div>
+        <div class="item">
+          <div class="item-title">3. 历史重大问题复盘、过往踩坑经验、避坑提示：</div>
+          <textarea name="s5_3" rows="2"></textarea>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>六、交接验收核对项</h2>
+        <p class="lead">交接完成前，三方逐项核对，全部达成视为交接合格：</p>
+        <ul class="checks">
+          <li>
+            <input type="checkbox" name="chk1" id="chk1">
+            <label for="chk1">接收人充分理解项目业务背景、整体目标与干系人情况，建立项目全局认知</label>
+          </li>
+          <li>
+            <input type="checkbox" name="chk2" id="chk2">
+            <label for="chk2">接收人掌握项目真实进度，清楚已完成工作、待办任务与关键时间节点</label>
+          </li>
+          <li>
+            <input type="checkbox" name="chk3" id="chk3">
+            <label for="chk3">接收人可以正常访问、查找全部项目文档、权限、物料等资源，能够独立复用</label>
+          </li>
+          <li>
+            <input type="checkbox" name="chk4" id="chk4">
+            <label for="chk4">接收人全部知晓现存问题、潜在风险以及对应的处理方案</label>
+          </li>
+          <li>
+            <input type="checkbox" name="chk5" id="chk5">
+            <label for="chk5">接收人能够独立复刻项目完整工作流程，可独立承接后续项目推进工作</label>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <input type="file" id="importFile" accept="application/json" hidden="" value="">
+
+  <script>
+    const KEY = "project-handover-template-v1";
+    /*EMBEDDED_START*/const EMBEDDED_DATA = {"fields":{"docTitle":"项目交接文档","dept":"HD","author":"周紫欣","writeDate":"2026-09-08","reviewer":"黄灿","fromPerson":"","toPerson":"","supervisor":"","projectName":"","startDate":"","endDate":"","s2_1":"","s2_2":"","s2_3":"","s2_4":"","s2_5":"","s3_1":"","s3_2":"","s3_4":"","s3_5":"","s3_6":"","s4_1":"","s4_3":"","s4_4":"","s5_3":""},"checks":{"chk1":false,"chk2":false,"chk3":false,"chk4":false,"chk5":false},"tables":{"revision":[["V1.0","初版发布，建立项目交接模板","周紫欣","2026-09-08"],["","","",""],["","","",""]],"todo":[["","","",""],["","","",""],["","","",""],["","","",""]],"accounts":[["","","",""],["","","",""],["","","",""]],"issues":[["","","","",""],["","","","",""],["","","","",""]],"risks":[["","","",""],["","","",""],["","","",""]]}};/*EMBEDDED_END*/
+    const statusEl = document.getElementById("saveStatus");
+    let saveTimer = null;
+
+    function collect() {
+      const data = { fields: {}, checks: {}, tables: {} };
+      document.querySelectorAll("input[name], textarea[name]").forEach((el) => {
+        if (el.closest("table[data-name]")) return;
+        if (el.type === "checkbox") data.checks[el.name] = el.checked;
+        else data.fields[el.name] = el.value;
+      });
+      document.querySelectorAll("table[data-name]").forEach((table) => {
+        const rows = [];
+        table.querySelectorAll("tbody tr").forEach((tr) => {
+          rows.push(
+            Array.from(tr.querySelectorAll("input, textarea")).map((i) => i.value)
+          );
+        });
+        data.tables[table.dataset.name] = rows;
+      });
+      return data;
+    }
+
+    function apply(data) {
+      if (!data) return;
+      Object.entries(data.fields || {}).forEach(([name, value]) => {
+        const el = document.querySelector(`[name="${name}"]`);
+        if (el && el.type !== "checkbox") el.value = value;
+      });
+      Object.entries(data.checks || {}).forEach(([name, value]) => {
+        const el = document.querySelector(`[name="${name}"]`);
+        if (el) el.checked = !!value;
+      });
+      Object.entries(data.tables || {}).forEach(([name, rows]) => {
+        const table = document.querySelector(`table[data-name="${name}"]`);
+        if (!table || !rows || !rows.length) return;
+        const tbody = table.querySelector("tbody");
+        const template = tbody.querySelector("tr");
+        tbody.innerHTML = "";
+        rows.forEach((row) => {
+          const tr = template.cloneNode(true);
+          const cells = tr.querySelectorAll("input, textarea");
+          row.forEach((val, i) => {
+            if (cells[i]) cells[i].value = val || "";
+          });
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(collect()));
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, "0");
+        const mm = String(now.getMinutes()).padStart(2, "0");
+        statusEl.textContent = `已自动保存  ${hh}:${mm}`;
+      } catch (e) {
+        statusEl.textContent = "保存失败（浏览器存储可能已满）";
+      }
+    }
+
+    function scheduleSave() {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(save, 300);
+    }
+
+    function addRow(btn) {
+      const table = btn.parentElement.querySelector("table.data") || btn.previousElementSibling;
+      const tbody = table.querySelector("tbody");
+      const tr = tbody.querySelector("tr").cloneNode(true);
+      tr.querySelectorAll("input, textarea").forEach((el) => {
+        if (el.type === "checkbox") el.checked = false;
+        else el.value = "";
+      });
+      tbody.appendChild(tr);
+      scheduleSave();
+    }
+
+    function suggestedName() {
+      const project = (document.querySelector('[name="projectName"]') || {}).value || "";
+      const title = (document.querySelector('[name="docTitle"]') || {}).value || "项目交接文档";
+      const base = ((project ? project + "-" : "") + title).replace(/[\\/:*?"<>|]/g, "_");
+      return base + ".html";
+    }
+
+    function bakeDom() {
+      const snapshot = [];
+      document.querySelectorAll("input, textarea").forEach((el) => {
+        snapshot.push({
+          el,
+          value: el.type === "checkbox" || el.type === "radio" ? el.checked : el.value,
+        });
+      });
+      snapshot.forEach(({ el, value }) => {
+        if (el.type === "checkbox" || el.type === "radio") {
+          if (value) el.setAttribute("checked", "checked");
+          else el.removeAttribute("checked");
+        } else if (el.tagName === "TEXTAREA") {
+          el.textContent = value;
+        } else {
+          el.setAttribute("value", value);
+        }
+      });
+      snapshot.forEach(({ el, value }) => {
+        if (el.type === "checkbox" || el.type === "radio") el.checked = value;
+        else el.value = value;
+      });
+    }
+
+    async function saveToFile() {
+      save();
+      bakeDom();
+      const data = collect();
+      let html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      html = html.replace(
+        /\/\*EMBEDDED_START\*\/[\s\S]*?\/\*EMBEDDED_END\*\//,
+        "/*EMBEDDED_START*/const EMBEDDED_DATA = " +
+          JSON.stringify(data).replace(/</g, "\\u003c") +
+          ";/*EMBEDDED_END*/"
+      );
+      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const name = suggestedName();
+
+      if (window.showSaveFilePicker) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: name,
+            types: [{ description: "HTML 文档", accept: { "text/html": [".html"] } }],
+          });
+          const writable = await handle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          statusEl.textContent = "已写入文件，把该 HTML 发给别人即可看到内容";
+          document.getElementById("banner").textContent =
+            "内容已固化到文件。请发送刚刚保存的那个 HTML，不要发送原来的空白模板。";
+          return;
+        } catch (e) {
+          if (e.name === "AbortError") return;
+        }
+      }
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      statusEl.textContent = "已下载带内容的 HTML，请发送下载文件";
+      document.getElementById("banner").textContent =
+        "内容已固化到下载文件。请发送下载目录里刚保存的 HTML，不要发送原来的空白模板。";
+    }
+
+    function printDoc() {
+      save();
+      window.print();
+    }
+
+    function exportJson() {
+      save();
+      const blob = new Blob([JSON.stringify(collect(), null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      const title = (document.querySelector('[name="docTitle"]').value || "项目交接文档").trim();
+      a.href = URL.createObjectURL(blob);
+      a.download = title + "-备份.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function importJson() {
+      document.getElementById("importFile").click();
+    }
+
+    function resetDoc() {
+      if (!confirm("确认清空本页已填写内容？此操作不可撤销。")) return;
+      localStorage.removeItem(KEY);
+      location.reload();
+    }
+
+    document.getElementById("importFile").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          apply(JSON.parse(reader.result));
+          save();
+          statusEl.textContent = "已导入备份";
+        } catch (err) {
+          alert("备份文件格式不正确");
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    });
+
+    document.getElementById("sheet").addEventListener("input", scheduleSave);
+    document.getElementById("sheet").addEventListener("change", scheduleSave);
+
+    try {
+      if (typeof EMBEDDED_DATA !== "undefined" && EMBEDDED_DATA) {
+        apply(EMBEDDED_DATA);
+      } else {
+        const raw = localStorage.getItem(KEY);
+        if (raw) apply(JSON.parse(raw));
+      }
+    } catch (e) {}
+  </script>
+
+
+</body></html>
