@@ -57,6 +57,11 @@
       opacity: .85;
     }
 
+    .save-status.is-unsaved {
+      color: #b08968;
+      opacity: 1;
+    }
+
     .toolbar button {
       appearance: none;
       border: 1px solid var(--line);
@@ -70,8 +75,15 @@
     }
 
     .toolbar button:hover { background: var(--head-bg); }
-    .toolbar button.primary { background: #e8e4d8; border-color: #ddd6c8; color: var(--ink); font-weight: 700; }
-    .toolbar button.primary:hover { background: #ddd6c8; }
+    .toolbar button.bind-btn {
+      background: #c4622d;
+      border-color: #c4622d;
+      color: #fff;
+      font-weight: 700;
+      padding: 8px 16px;
+    }
+    .toolbar button.bind-btn:hover { background: #b05626; color: #fff; }
+    .toolbar button.bind-btn[hidden] { display: none; }
 
     .sheet {
       width: 210mm;
@@ -238,29 +250,11 @@
 
     .section { margin: 0 0 22px; }
 
-    .hint {
-      margin: 0 0 12px;
-      padding: 8px 12px;
-      background: #f7f5f0;
-      border-left: 3px solid #e6d7be;
-      color: var(--hint);
-      font-size: 13px;
-      line-height: 1.65;
-    }
-
-    .item { margin: 0 0 14px; }
-
-    .item-title {
-      margin: 0 0 6px;
-      font-weight: 700;
-      color: var(--ink);
-    }
-
     textarea,
     .blank {
       display: block;
       width: 100%;
-      min-height: 3.4em;
+      min-height: 5em;
       padding: 8px 10px;
       border: 1px solid var(--line);
       background: var(--fill);
@@ -286,6 +280,12 @@
       overflow-wrap: anywhere;
       word-break: break-word;
       border-radius: 2px;
+    }
+
+    textarea::placeholder,
+    input::placeholder {
+      color: #c4bfb6;
+      opacity: 1;
     }
 
     textarea:focus { border-color: var(--focus); background: #fff; box-shadow: 0 0 0 3px rgba(138, 160, 179, .18); }
@@ -345,12 +345,16 @@
     }
 
     table.kv th {
-      width: 28%;
+      width: 22%;
       background: var(--head-bg);
       color: var(--head-text);
       font-weight: 700;
       text-align: center;
+      letter-spacing: 0;
+      font-size: 13px;
+      vertical-align: middle;
     }
+    table.kv.pair th { width: 16%; }
 
     table.kv td { background: #fff; padding: 0; }
     table.kv td input {
@@ -363,6 +367,88 @@
       min-height: 2.6em;
     }
     table.kv td input:focus { background: #f3f6f8; }
+    table.kv td textarea {
+      width: 100%;
+      min-height: 3.4em;
+      border: none;
+      background: transparent;
+      padding: 8px 12px;
+      font: inherit;
+      line-height: 1.7;
+      resize: vertical;
+      outline: none;
+      border-radius: 0;
+      overflow: hidden;
+      field-sizing: content;
+    }
+    table.kv td textarea:focus { background: #f3f6f8; box-shadow: none; }
+    table.kv td select {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font: inherit;
+      padding: 8px 12px;
+      min-height: 2.6em;
+      outline: none;
+      color: var(--ink);
+    }
+    .arch-cell select { border-bottom: 1px solid var(--line); }
+    .arch-cell .arch-note[hidden] { display: none; }
+
+    table.roles {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin: 0 0 8px;
+    }
+    table.roles th {
+      background: var(--head-bg);
+      color: var(--head-text);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 8px 6px;
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+    table.roles td {
+      border: 1px solid var(--line);
+      padding: 0;
+      background: #fff;
+    }
+    table.roles td input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font: inherit;
+      padding: 8px 6px;
+      text-align: center;
+      outline: none;
+      min-height: 2.6em;
+    }
+    table.roles td input:focus { background: #f3f6f8; }
+
+    .choice {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      align-items: center;
+      padding: 8px 12px;
+      min-height: 2.6em;
+    }
+    .choice label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      font-weight: 400;
+      color: var(--ink);
+    }
+    .item-label {
+      margin: 10px 0 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--head-text);
+    }
 
     .add-row {
       appearance: none;
@@ -411,7 +497,9 @@
         page-break-after: always;
         break-after: page;
       }
-      h2, .item-title, .hint, .lead { break-after: avoid; page-break-after: avoid; }
+      h2, .lead { break-after: avoid; page-break-after: avoid; }
+      input::placeholder,
+      textarea::placeholder { color: transparent !important; }
       /* 整节避免分页会在内容超过一页时被裁切，改为允许跨页 */
       .section { break-inside: auto; }
       table { break-inside: auto; }
@@ -428,7 +516,7 @@
       table.kv td .print-plain {
         border: none;
         min-height: 2.6em;
-        padding: 8px;
+        padding: 8px 12px;
         border-radius: 0;
       }
       .blank, table.kv td input, table.data td input {
@@ -446,6 +534,24 @@
       text-align: center;
       border-bottom: 1px solid #ebe4d6;
     }
+    .banner.need-auth {
+      background: #c4622d;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 24px;
+      cursor: pointer;
+      letter-spacing: .04em;
+      border-bottom: 1px solid #b05626;
+    }
+    .banner.need-auth:hover { background: #b05626; }
+    .banner.is-bound {
+      background: #eef3ee;
+      color: #5d7a64;
+      cursor: default;
+      font-weight: 400;
+    }
+    .banner.no-fs { cursor: default; }
 
     @media (max-width: 900px) {
       .sheet { margin: 0; box-shadow: none; width: 100%; }
@@ -460,15 +566,13 @@
 <body>
   <div class="toolbar no-print">
     <div class="brand">项目交接模板</div>
-    <div class="save-status" id="saveStatus">已自动保存  12:26</div>
-    <button type="button" onclick="saveToFile()" class="primary">保存到文件</button>
+    <div class="save-status" id="saveStatus">尚未绑定文件</div>
+    <button type="button" class="bind-btn" id="bindBtn" onclick="onBindClick()">授权自动保存到本文件</button>
     <button type="button" onclick="printDoc()">打印 / 导出 PDF</button>
-    <button type="button" onclick="exportJson()">导出备份</button>
-    <button type="button" onclick="importJson()">导入备份</button>
     <button type="button" onclick="resetDoc()">清空</button>
   </div>
-  <div class="banner no-print" id="banner">
-    浏览器里填写的内容只存在这台电脑。发给同事前，请点右上角「保存到文件」，把下载下来的 HTML 发出去（或打印成 PDF）。
+  <div class="banner need-auth no-print" id="banner" role="button" tabindex="0" onclick="onBindClick()">
+    填写前请先点此授权，并选中当前这个 HTML。未授权时内容只留在这台电脑，关页或换机可能丢失。
   </div>
 
   <div class="sheet" id="sheet">
@@ -537,308 +641,466 @@
     <!-- 正文 -->
     <div class="body">
       <section class="section">
-        <h2>一、交接基础信息</h2>
+        <h2>一、项目概况</h2>
+        <table class="kv pair">
+          <tbody>
+            <tr>
+              <th>项目名称</th>
+              <td><input name="projectName" value="" placeholder="诊断--江铃（HD_JMC）" data-ph="诊断--江铃（HD_JMC）"></td>
+              <th>代码框架</th>
+              <td class="arch-cell">
+                <select name="codeArch" onchange="syncCodeArchNote()">
+                  <option value=""></option>
+                  <option value="lib_new文本框架">lib_new文本框架</option>
+                  <option value="老框架">老框架</option>
+                  <option value="表格框架">表格框架</option>
+                  <option value="自定义">自定义</option>
+                  <option value="混合">混合</option>
+                </select>
+                <input class="arch-note" name="codeArchNote" value="" hidden placeholder="自定义请写明框架名 混合请写明哪几种 如 lib_new + 老框架" data-ph="自定义请写明框架名 混合请写明哪几种 如 lib_new + 老框架">
+              </td>
+            </tr>
+            <tr>
+              <th>开发目标</th>
+              <td colspan="3"><textarea name="devGoal" rows="2" placeholder="这个项目需要完成到什么样子的开发" data-ph="这个项目需要完成到什么样子的开发"></textarea></td>
+            </tr>
+            <tr>
+              <th>需求来源</th>
+              <td colspan="3"><textarea name="reqSource" rows="2" placeholder="描述项目背景 为什么要做 是谁提出要做的" data-ph="描述项目背景 为什么要做 是谁提出要做的"></textarea></td>
+            </tr>
+            <tr>
+              <th>开发参照</th>
+              <td colspan="3"><textarea name="devRef" rows="2" placeholder="该项目参考过什么开发 如原厂 / X5竞品 / 专检资料" data-ph="该项目参考过什么开发 如原厂 / X5竞品 / 专检资料"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="roles">
+          <thead>
+            <tr>
+              <th>移交人</th>
+              <th>承接人</th>
+              <th>监管人</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input name="fromPerson" value="" placeholder="姓名" data-ph="姓名"></td>
+              <td><input name="toPerson" value="" placeholder="姓名" data-ph="姓名"></td>
+              <td><input name="supervisor" value="" placeholder="姓名" data-ph="姓名"></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>二、进展与计划</h2>
         <table class="kv">
-          <tbody><tr>
-            <th>交接人</th>
-            <td><input name="fromPerson" value=""></td>
-          </tr>
-          <tr>
-            <th>接收人</th>
-            <td><input name="toPerson" value=""></td>
-          </tr>
-          <tr>
-            <th>主管负责人</th>
-            <td><input name="supervisor" value=""></td>
-          </tr>
-          <tr>
-            <th>交接涉及项目</th>
-            <td><input name="projectName" value=""></td>
-          </tr>
-          <tr>
-            <th>交接启动日期</th>
-            <td><input type="date" name="startDate" value=""></td>
-          </tr>
-          <tr>
-            <th>计划交接完成日期</th>
-            <td><input type="date" name="endDate" value=""></td>
-          </tr>
-        </tbody></table>
+          <tbody>
+            <tr>
+              <th>已发布</th>
+              <td><textarea name="progress" rows="2" placeholder="已发布哪些版本 各版本新增或优化了什么&#10;如 江铃V22.00 新增五款XX车型" data-ph="已发布哪些版本 各版本新增或优化了什么&#10;如 江铃V22.00 新增五款XX车型"></textarea></td>
+            </tr>
+            <tr>
+              <th>现阶段</th>
+              <td><textarea name="currentStage" rows="2" placeholder="现在做哪个版本 主要实现什么 做到哪一阶段&#10;如 江铃V22.10开发中 老车适配已交测" data-ph="现在做哪个版本 主要实现什么 做到哪一阶段&#10;如 江铃V22.10开发中 老车适配已交测"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="item-label">待办</div>
+        <table class="data" data-name="todo">
+          <thead>
+            <tr>
+              <th style="width:46%">事项</th>
+              <th style="width:22%">时间节点</th>
+              <th style="width:32%">备注/难点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input value="" placeholder="完成江铃V21.00老车型新增系统开发" data-ph="完成江铃V21.00老车型新增系统开发"></td>
+              <td><input value="" placeholder="2026-10" data-ph="2026-10"></td>
+              <td><input value="" placeholder="菜单结构复杂对比工作比较难" data-ph="菜单结构复杂对比工作比较难"></td>
+            </tr>
+            <tr>
+              <td><input value=""></td>
+              <td><input value=""></td>
+              <td><input value=""></td>
+            </tr>
+            <tr>
+              <td><input value=""></td>
+              <td><input value=""></td>
+              <td><input value=""></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
+        <div class="item-label">需求与缺陷转交</div>
+        <table class="kv pair">
+          <tbody>
+            <tr>
+              <th>华为云 · 需求已转承接人</th>
+              <td>
+                <div class="choice">
+                  <label><input type="radio" autocomplete="off" name="hwReq" value="是"> 是</label>
+                  <label><input type="radio" autocomplete="off" name="hwReq" value="否"> 否</label>
+                  <label><input type="radio" autocomplete="off" name="hwReq" value="无"> 无</label>
+                </div>
+              </td>
+              <th>华为云 · 缺陷已转承接人</th>
+              <td>
+                <div class="choice">
+                  <label><input type="radio" autocomplete="off" name="hwBug" value="是"> 是</label>
+                  <label><input type="radio" autocomplete="off" name="hwBug" value="否"> 否</label>
+                  <label><input type="radio" autocomplete="off" name="hwBug" value="无"> 无</label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>禅道 · 需求已转承接人</th>
+              <td>
+                <div class="choice">
+                  <label><input type="radio" autocomplete="off" name="ztReq" value="是"> 是</label>
+                  <label><input type="radio" autocomplete="off" name="ztReq" value="否"> 否</label>
+                  <label><input type="radio" autocomplete="off" name="ztReq" value="无"> 无</label>
+                </div>
+              </td>
+              <th>禅道 · 缺陷已转承接人</th>
+              <td>
+                <div class="choice">
+                  <label><input type="radio" autocomplete="off" name="ztBug" value="是"> 是</label>
+                  <label><input type="radio" autocomplete="off" name="ztBug" value="否"> 否</label>
+                  <label><input type="radio" autocomplete="off" name="ztBug" value="无"> 无</label>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <section class="section">
-        <h2>二、项目全貌交接（背景与整体概况）</h2>
-        <p class="hint">填写提示：说明项目由来、业务目标、覆盖范围、相关干系人，帮助接收人快速建立项目全局认知。</p>
-
-        <div class="item">
-          <div class="item-title">1. 项目业务背景与立项初衷：</div>
-          <textarea name="s2_1" rows="2"></textarea>
-        </div>
-        <div class="item">
-          <div class="item-title">2. 项目核心目标与预期交付成果：</div>
-          <textarea name="s2_2" rows="2"></textarea>
-        </div>
-        <div class="item">
-          <div class="item-title">3. 项目整体范围与约束条件（时间、预算、业务限制等）：</div>
-          <textarea name="s2_3" rows="2"></textarea>
-        </div>
-        <div class="item">
-          <div class="item-title">4. 干系人清单：内部对接同事、业务方、客户、合作供应商，说明每个人的角色与主要诉求：</div>
-          <textarea name="s2_4" rows="2"></textarea>
-        </div>
-        <div class="item">
-          <div class="item-title">5. 关键历史里程碑、重要决策记录：</div>
-          <textarea name="s2_5" rows="2"></textarea>
-        </div>
+        <h2>三、实现上的特例</h2>
+        <table class="kv">
+          <tbody>
+            <tr>
+              <th>如何编译运行</th>
+              <td><textarea name="buildRun" rows="2" placeholder="无特例写无。如一工程两包、要改开关才能调、编哪个 bat" data-ph="无特例写无。如一工程两包、要改开关才能调、编哪个 bat"></textarea></td>
+            </tr>
+            <tr>
+              <th>依赖与动态调用</th>
+              <td><textarea name="deps" rows="2" placeholder="无特例写无。如动态调别的工程/子模块；缺了某文件就跑不起来要写明" data-ph="无特例写无。如动态调别的工程/子模块；缺了某文件就跑不起来要写明"></textarea></td>
+            </tr>
+            <tr>
+              <th>如何继续开发</th>
+              <td><textarea name="iterate" rows="2" placeholder="无特例写无。与常规开发不一样的要点，例如接线图" data-ph="无特例写无。与常规开发不一样的要点，例如接线图"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <section class="section">
-        <h2>三、项目进度交接（当前现状与后续任务）</h2>
-        <p class="hint">填写提示：梳理已完成工作、当前所处阶段、未完成任务、工作卡点及待决策事项。</p>
-
-        <div class="item">
-          <div class="item-title">1. 项目当前所处阶段：</div>
-          <textarea name="s3_1" rows="2"></textarea>
-        </div>
-        <div class="item">
-          <div class="item-title">2. 已完成工作与已验收成果：</div>
-          <textarea name="s3_2" rows="2"></textarea>
-        </div>
-        <div class="item">
-          <div class="item-title">3. 尚未完成工作任务清单</div>
-          <table class="data" data-name="todo">
-            <thead>
-              <tr>
-                <th style="width:32%">任务简述</th>
-                <th style="width:22%">计划完成时间</th>
-                <th style="width:22%">前置依赖</th>
-                <th style="width:24%">备注</th>
-              </tr>
-            </thead>
-            <tbody><tr>
-                <td><input value=""></td>
-                <td><input type="date" value=""></td>
-                <td><input value=""></td>
-                <td><input value=""></td>
-              </tr><tr>
-                <td><input value=""></td>
-                <td><input type="date" value=""></td>
-                <td><input value=""></td>
-                <td><input value=""></td>
-              </tr><tr>
-                <td><input value=""></td>
-                <td><input type="date" value=""></td>
-                <td><input value=""></td>
-                <td><input value=""></td>
-              </tr><tr>
-                <td><input value=""></td>
-                <td><input type="date" value=""></td>
-                <td><input value=""></td>
-                <td><input value=""></td>
-              </tr></tbody>
-          </table>
-          <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
-        </div>
-        <div class="item">
-          <div class="item-title">4. 后续重点工作计划、排期安排：</div>
-          <textarea name="s3_4" rows="2"></textarea>
-        </div>
-        <div class="item">
-          <div class="item-title">5. 待评审、待决策卡点事项（写明卡点原因、决策责任人）：</div>
-          <p class="hint">填写提示：记录目前悬而未决、需要评审或领导拍板才能继续推进的事项；务必写清楚：卡点事项、卡住的原因、需要找谁做决策。</p>
-          <textarea name="s3_5" rows="2"></textarea>
-        </div>
-        <div class="item">
-          <div class="item-title">6. 重要沟通记录、会议纪要存放位置：</div>
-          <p class="hint">填写提示：填写会议纪要、客户沟通记录的云盘 / 知识库完整路径、链接；标注关键纪要文件名称，方便接收人追溯历史约定。</p>
-          <textarea name="s3_6" rows="2"></textarea>
-        </div>
+        <h2>四、资源与对接</h2>
+        <div class="item-label">对照设备 / 参考资源</div>
+        <table class="data" data-name="devices">
+          <thead>
+            <tr>
+              <th style="width:28%">名称</th>
+              <th style="width:36%">账号</th>
+              <th style="width:36%">注意 / 备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input value="" placeholder="原厂仪 / X5 / 专检DPF" data-ph="原厂仪 / X5 / 专检DPF"></td>
+              <td><input value="" placeholder="谁的账号，密码另发" data-ph="谁的账号，密码另发"></td>
+              <td><input value="" placeholder="X5不要联网；另有交接写文档名" data-ph="X5不要联网；另有交接写文档名"></td>
+            </tr>
+            <tr>
+              <td><input value=""></td>
+              <td><input value=""></td>
+              <td><input value=""></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
+        <div class="item-label">开发工具</div>
+        <table class="data" data-name="tools">
+          <thead>
+            <tr>
+              <th style="width:28%">名称</th>
+              <th style="width:36%">作用</th>
+              <th style="width:36%">已打包发给承接人</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input value="" placeholder="提库工具" data-ph="提库工具"></td>
+              <td><input value="" placeholder="从原厂库抽出诊断数据" data-ph="从原厂库抽出诊断数据"></td>
+              <td><input value="" placeholder="已发 / 未发" data-ph="已发 / 未发"></td>
+            </tr>
+            <tr>
+              <td><input value=""></td>
+              <td><input value=""></td>
+              <td><input value=""></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
+        <div class="item-label">资料</div>
+        <table class="data" data-name="materials">
+          <thead>
+            <tr>
+              <th style="width:28%">资料</th>
+              <th style="width:36%">作用</th>
+              <th style="width:36%">是否打包给接收人</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input value="" placeholder="原厂底层库" data-ph="原厂底层库"></td>
+              <td><input value="" placeholder="对显示、引脚、报文时用" data-ph="对显示、引脚、报文时用"></td>
+              <td><input value="" placeholder="是 / 否" data-ph="是 / 否"></td>
+            </tr>
+            <tr>
+              <td><input value="" placeholder="开发进度表" data-ph="开发进度表"></td>
+              <td><input value=""></td>
+              <td><input value=""></td>
+            </tr>
+            <tr>
+              <td><input value="" placeholder="项目功能表" data-ph="项目功能表"></td>
+              <td><input value=""></td>
+              <td><input value=""></td>
+            </tr>
+            <tr>
+              <td><input value="" placeholder="自己整理的资料" data-ph="自己整理的资料"></td>
+              <td><input value=""></td>
+              <td><input value=""></td>
+            </tr>
+            <tr>
+              <td><input value="" placeholder="能跑通的模拟数据" data-ph="能跑通的模拟数据"></td>
+              <td><input value=""></td>
+              <td><input value=""></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
+        <div class="item-label">对接人</div>
+        <table class="data" data-name="people">
+          <thead>
+            <tr>
+              <th style="width:18%">角色</th>
+              <th style="width:22%">姓名</th>
+              <th style="width:60%">对接什么 / 进展</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input value="" placeholder="逆向" data-ph="逆向"></td>
+              <td><input value="" placeholder="对接人姓名" data-ph="对接人姓名"></td>
+              <td><input value="" placeholder="逆向内容，逆向是否已完成" data-ph="逆向内容，逆向是否已完成"></td>
+            </tr>
+            <tr>
+              <td><input value="" placeholder="测试" data-ph="测试"></td>
+              <td><input value="" placeholder="对接人姓名" data-ph="对接人姓名"></td>
+              <td><input value="" placeholder="当前测试版本，测试第几轮" data-ph="当前测试版本，测试第几轮"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
       </section>
 
       <section class="section">
-        <h2>四、项目资源交接（文档、权限、物料、外部资源）</h2>
-        <p class="hint">填写提示：明确所有资源存放路径、账号信息、对接联系人，保证接收人可直接查找、复用所有项目资源。</p>
-
-        <div class="item">
-          <div class="item-title">1. 项目文档资料：需求、方案、汇报材料、复盘文档等，注明存储路径、重要版本说明：</div>
-          <textarea name="s4_1" rows="2"></textarea>
-        </div>
-        <div class="item">
-          <div class="item-title">2. 系统、平台账号权限清单</div>
-          <table class="data" data-name="accounts">
-            <thead>
-              <tr>
-                <th style="width:26%">系统/平台名称</th>
-                <th style="width:26%">账号信息</th>
-                <th style="width:24%">权限说明</th>
-                <th style="width:24%">移交方式</th>
-              </tr>
-            </thead>
-            <tbody><tr>
-                <td><input value=""></td>
-                <td><input value=""></td>
-                <td><input value=""></td>
-                <td><input value=""></td>
-              </tr><tr>
-                <td><input value=""></td>
-                <td><input value=""></td>
-                <td><input value=""></td>
-                <td><input value=""></td>
-              </tr><tr>
-                <td><input value=""></td>
-                <td><input value=""></td>
-                <td><input value=""></td>
-                <td><input value=""></td>
-              </tr></tbody>
-          </table>
-          <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
-        </div>
-        <div class="item">
-          <div class="item-title">3. 项目物料资产：原型、设计源文件、配置文件、脚本等：</div>
-          <textarea name="s4_3" rows="2"></textarea>
-        </div>
-        <div class="item">
-          <div class="item-title">4. 合同、往来资料、外部合作方联系人信息：</div>
-          <textarea name="s4_4" rows="2"></textarea>
-        </div>
+        <h2>五、叮嘱、问题与风险</h2>
+        <table class="kv">
+          <tbody>
+            <tr>
+              <th>叮嘱 / 注意点</th>
+              <td><textarea name="mustKnow" rows="2" placeholder="一做就错的点 给承接人当面嘱咐的话&#10;如 X5不要联网会被锁&#10;直接改lib库下次转库会被覆盖&#10;原厂显示要造完该命令全部字节" data-ph="一做就错的点 给承接人当面嘱咐的话&#10;如 X5不要联网会被锁&#10;直接改lib库下次转库会被覆盖&#10;原厂显示要造完该命令全部字节"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="item-label">现存问题</div>
+        <table class="data" data-name="issues">
+          <thead>
+            <tr>
+              <th style="width:34%">问题</th>
+              <th style="width:28%">现在怎样</th>
+              <th style="width:38%">备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><textarea rows="2" placeholder="从最近诊断进自动诊断 到不了拓扑图扫描" data-ph="从最近诊断进自动诊断 到不了拓扑图扫描"></textarea></td>
+              <td><textarea rows="2" placeholder="已知 还没改" data-ph="已知 还没改"></textarea></td>
+              <td><textarea rows="2" placeholder="禅道已建遗留缺陷 并对接平台提了接口兼容需求" data-ph="禅道已建遗留缺陷 并对接平台提了接口兼容需求"></textarea></td>
+            </tr>
+            <tr>
+              <td><textarea rows="2"></textarea></td>
+              <td><textarea rows="2"></textarea></td>
+              <td><textarea rows="2"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
+        <div class="item-label">风险</div>
+        <table class="data" data-name="risks">
+          <thead>
+            <tr>
+              <th style="width:34%">可能有什么风险</th>
+              <th style="width:32%">后果</th>
+              <th style="width:34%">怎么避免</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><textarea rows="2" placeholder="提库数据流可能不准 原厂底层库本身有缺陷" data-ph="提库数据流可能不准 原厂底层库本身有缺陷"></textarea></td>
+              <td><textarea rows="2" placeholder="实车诊断读到的值不准" data-ph="实车诊断读到的值不准"></textarea></td>
+              <td><textarea rows="2" placeholder="对照原厂仪时逐项细对 不轻信提库结果" data-ph="对照原厂仪时逐项细对 不轻信提库结果"></textarea></td>
+            </tr>
+            <tr>
+              <td><textarea rows="2"></textarea></td>
+              <td><textarea rows="2"></textarea></td>
+              <td><textarea rows="2"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
       </section>
 
       <section class="section">
-        <h2>五、现存问题与潜在风险交接</h2>
-        <p class="hint">填写提示：如实记录现存问题、历史踩坑经历、潜在风险，同步填写已执行处理动作及现有应对预案。</p>
-
-        <div class="item">
-          <div class="item-title">1. 当前现存问题清单</div>
-          <table class="data" data-name="issues">
-            <thead>
-              <tr>
-                <th style="width:22%">问题描述</th>
-                <th style="width:18%">产生原因</th>
-                <th style="width:22%">已采取处理动作</th>
-                <th style="width:16%">当前状态</th>
-                <th style="width:22%">后续建议</th>
-              </tr>
-            </thead>
-            <tbody><tr>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-              </tr><tr>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-              </tr><tr>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-              </tr></tbody>
-          </table>
-          <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
-        </div>
-        <div class="item">
-          <div class="item-title">2. 项目潜在风险清单</div>
-          <table class="data" data-name="risks">
-            <thead>
-              <tr>
-                <th style="width:28%">风险描述</th>
-                <th style="width:18%">风险等级（高/中/低）</th>
-                <th style="width:26%">可能造成影响</th>
-                <th style="width:28%">应对预案/建议</th>
-              </tr>
-            </thead>
-            <tbody><tr>
-                <td><textarea rows="2"></textarea></td>
-                <td><input value=""></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-              </tr><tr>
-                <td><textarea rows="2"></textarea></td>
-                <td><input value=""></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-              </tr><tr>
-                <td><textarea rows="2"></textarea></td>
-                <td><input value=""></td>
-                <td><textarea rows="2"></textarea></td>
-                <td><textarea rows="2"></textarea></td>
-              </tr></tbody>
-          </table>
-          <button type="button" class="add-row" onclick="addRow(this)">+ 添加一行</button>
-        </div>
-        <div class="item">
-          <div class="item-title">3. 历史重大问题复盘、过往踩坑经验、避坑提示：</div>
-          <textarea name="s5_3" rows="2"></textarea>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>六、交接验收核对项</h2>
-        <p class="lead">交接完成前，三方逐项核对，全部达成视为交接合格：</p>
+        <h2>六、移交确认</h2>
+        <p class="lead">交接完成前逐项核对，全部达成视为交接合格：</p>
         <ul class="checks">
           <li>
             <input type="checkbox" name="chk1" id="chk1">
-            <label for="chk1">接收人充分理解项目业务背景、整体目标与干系人情况，建立项目全局认知</label>
+            <label for="chk1">已明确开发目标、需求提出人、开发参照</label>
           </li>
           <li>
             <input type="checkbox" name="chk2" id="chk2">
-            <label for="chk2">接收人掌握项目真实进度，清楚已完成工作、待办任务与关键时间节点</label>
+            <label for="chk2">已掌握已发布情况、现阶段与待办</label>
           </li>
           <li>
             <input type="checkbox" name="chk3" id="chk3">
-            <label for="chk3">接收人可以正常访问、查找全部项目文档、权限、物料等资源，能够独立复用</label>
+            <label for="chk3">华为云、禅道未闭环需求与缺陷已转至承接人（无则该项视为达成）</label>
           </li>
           <li>
             <input type="checkbox" name="chk4" id="chk4">
-            <label for="chk4">接收人全部知晓现存问题、潜在风险以及对应的处理方案</label>
+            <label for="chk4">已能按本文编译运行；对照设备/参考资源可拿到；工具和资料已打包发给承接人（不依赖交接人账号）</label>
           </li>
           <li>
             <input type="checkbox" name="chk5" id="chk5">
-            <label for="chk5">接收人能够独立复刻项目完整工作流程，可独立承接后续项目推进工作</label>
+            <label for="chk5">已阅叮嘱与注意点、现存问题与风险</label>
+          </li>
+          <li>
+            <input type="checkbox" name="chk6" id="chk6">
+            <label for="chk6">可按本文独立续作</label>
           </li>
         </ul>
       </section>
     </div>
   </div>
 
-  <input type="file" id="importFile" accept="application/json" hidden="" value="">
-
   <script>
-    const KEY = "project-handover-template-v1";
-    /*EMBEDDED_START*/const EMBEDDED_DATA = {"fields":{"docTitle":"项目交接文档","dept":"HD","author":"周紫欣","writeDate":"2026-09-08","reviewer":"黄灿","fromPerson":"","toPerson":"","supervisor":"","projectName":"","startDate":"","endDate":"","s2_1":"","s2_2":"","s2_3":"","s2_4":"","s2_5":"","s3_1":"","s3_2":"","s3_4":"","s3_5":"","s3_6":"","s4_1":"","s4_3":"","s4_4":"","s5_3":""},"checks":{"chk1":false,"chk2":false,"chk3":false,"chk4":false,"chk5":false},"tables":{"revision":[["V1.0","初版发布，建立项目交接模板","周紫欣","2026-09-08"],["","","",""],["","","",""]],"todo":[["","","",""],["","","",""],["","","",""],["","","",""]],"accounts":[["","","",""],["","","",""],["","","",""]],"issues":[["","","","",""],["","","","",""],["","","","",""]],"risks":[["","","",""],["","","",""],["","","",""]]}};/*EMBEDDED_END*/
+    const LS_PREFIX = "handover-v5:";
+    const ANON_KEY = "handover-v5:anon";
+    const IDB_NAME = "handover-fs";
+    const IDB_STORE = "handles";
+    /*EMBEDDED_START*/const EMBEDDED_DATA = {"docId":"","savedAt":0,"fields":{"docTitle":"项目交接文档","dept":"HD","author":"周紫欣","writeDate":"2026-09-08","reviewer":"黄灿","projectName":"","codeArch":"","codeArchNote":"","devGoal":"","reqSource":"","devRef":"","fromPerson":"","toPerson":"","supervisor":"","progress":"","currentStage":"","buildRun":"","deps":"","structure":"","iterate":"","mustKnow":"","hwReq":"","hwBug":"","ztReq":"","ztBug":""},"checks":{"chk1":false,"chk2":false,"chk3":false,"chk4":false,"chk5":false,"chk6":false},"tables":{"revision":[["V1.0","初版发布，建立项目交接模板","周紫欣","2026-09-08"],["","","",""],["","","",""]],"todo":[["","",""],["","",""],["","",""]],"devices":[["","",""],["","",""]],"tools":[["","",""],["","",""]],"materials":[["","",""],["","",""],["","",""],["","",""],["","",""]],"people":[["","",""],["","",""]],"issues":[["","",""],["","",""]],"risks":[["","",""],["","",""]]}};/*EMBEDDED_END*/
+
     const statusEl = document.getElementById("saveStatus");
+    const bannerEl = document.getElementById("banner");
+    const bindBtn = document.getElementById("bindBtn");
+    const COVER_FIELDS = { docTitle: 1, dept: 1, author: 1, writeDate: 1, reviewer: 1 };
+
+    function uuid() {
+      if (crypto.randomUUID) return crypto.randomUUID();
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    }
+
+    function supportsFS() {
+      return typeof window.showSaveFilePicker === "function";
+    }
+
+    function resolveDocId() {
+      const fromFile = EMBEDDED_DATA && EMBEDDED_DATA.docId;
+      if (fromFile) return fromFile;
+      try {
+        const anon = localStorage.getItem(ANON_KEY);
+        if (anon) {
+          const p = JSON.parse(anon);
+          if (p && p.docId) return p.docId;
+        }
+      } catch (e) {}
+      return uuid();
+    }
+
+    let docId = resolveDocId();
+    let fileHandle = null;
+    let bound = false;
     let saveTimer = null;
+    let fileTimer = null;
+    let writing = false;
+    let writeQueued = false;
+    let skipUnloadPrompt = false;
+    let openSnapshot = null;
+
+    function lsKey() {
+      return LS_PREFIX + docId;
+    }
 
     function collect() {
-      const data = { fields: {}, checks: {}, tables: {} };
-      document.querySelectorAll("input[name], textarea[name]").forEach((el) => {
+      const data = {
+        fields: {},
+        checks: {},
+        tables: {},
+        coverLocked: true,
+        docId: docId,
+        savedAt: Date.now(),
+      };
+      document.querySelectorAll("input[name], textarea[name], select[name]").forEach((el) => {
         if (el.closest("table[data-name]")) return;
         if (el.type === "checkbox") data.checks[el.name] = el.checked;
-        else data.fields[el.name] = el.value;
+        else if (el.type === "radio") {
+          if (el.checked) data.fields[el.name] = el.value;
+        } else data.fields[el.name] = el.value;
       });
       document.querySelectorAll("table[data-name]").forEach((table) => {
         const rows = [];
         table.querySelectorAll("tbody tr").forEach((tr) => {
-          rows.push(
-            Array.from(tr.querySelectorAll("input, textarea")).map((i) => i.value)
-          );
+          rows.push(Array.from(tr.querySelectorAll("input, textarea")).map((i) => i.value));
         });
         data.tables[table.dataset.name] = rows;
       });
-      data.coverLocked = true;
       return data;
+    }
+
+    function stripPlaceholders(tr) {
+      tr.querySelectorAll("[placeholder]").forEach((el) => el.removeAttribute("placeholder"));
+    }
+
+    function syncCodeArchNote() {
+      const sel = document.querySelector('[name="codeArch"]');
+      const note = document.querySelector('[name="codeArchNote"]');
+      if (!sel || !note) return;
+      note.hidden = sel.value !== "自定义" && sel.value !== "混合";
     }
 
     function apply(data) {
       if (!data) return;
       Object.entries(data.fields || {}).forEach(([name, value]) => {
+        const radios = document.querySelectorAll(`input[type="radio"][name="${name}"]`);
+        if (radios.length) {
+          const v = (value == null) ? "" : String(value);
+          radios.forEach((r) => {
+            r.checked = (v === "是" || v === "否" || v === "无") && r.value === v;
+          });
+          return;
+        }
         const el = document.querySelector(`[name="${name}"]`);
-        if (el && el.type !== "checkbox") el.value = value;
+        if (el && el.type !== "checkbox") el.value = value || "";
       });
       Object.entries(data.checks || {}).forEach(([name, value]) => {
         const el = document.querySelector(`[name="${name}"]`);
@@ -848,10 +1110,35 @@
         const table = document.querySelector(`table[data-name="${name}"]`);
         if (!table || !rows || !rows.length) return;
         const tbody = table.querySelector("tbody");
+        if (name === "materials" || name === "people") {
+          const trs = Array.from(tbody.querySelectorAll("tr"));
+          rows.forEach((row, idx) => {
+            let tr = trs[idx];
+            if (!tr) {
+              tr = trs[0].cloneNode(true);
+              tr.querySelectorAll("input, textarea").forEach((el) => {
+                el.value = "";
+                el.removeAttribute("placeholder");
+                el.removeAttribute("data-ph");
+              });
+              tbody.appendChild(tr);
+              trs.push(tr);
+            }
+            const cells = tr.querySelectorAll("input, textarea");
+            row.forEach((val, i) => {
+              if (!cells[i]) return;
+              const ph = cells[i].getAttribute("data-ph") || "";
+              const v = String(val || "").trim();
+              cells[i].value = (v && v !== ph) ? v : "";
+            });
+          });
+          return;
+        }
         const template = tbody.querySelector("tr");
         tbody.innerHTML = "";
-        rows.forEach((row) => {
+        rows.forEach((row, idx) => {
           const tr = template.cloneNode(true);
+          if (idx > 0) stripPlaceholders(tr);
           const cells = tr.querySelectorAll("input, textarea");
           row.forEach((val, i) => {
             if (cells[i]) cells[i].value = val || "";
@@ -860,6 +1147,7 @@
         });
       });
       setCoverLocked(true);
+      syncCodeArchNote();
       fitAllTextareas();
     }
 
@@ -874,21 +1162,97 @@
       });
     }
 
-    function save() {
+    function dataHasUserContent(data) {
+      if (!data) return false;
+      for (const [k, v] of Object.entries(data.fields || {})) {
+        if (COVER_FIELDS[k]) continue;
+        if (String(v || "").trim()) return true;
+      }
+      if (Object.values(data.checks || {}).some(Boolean)) return true;
+      for (const [name, rows] of Object.entries(data.tables || {})) {
+        if (name === "revision") continue;
+        for (const row of rows || []) {
+          if (row.some((c) => String(c || "").trim())) return true;
+        }
+      }
+      return false;
+    }
+
+    function readLS(key) {
       try {
-        localStorage.setItem(KEY, JSON.stringify(collect()));
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2, "0");
-        const mm = String(now.getMinutes()).padStart(2, "0");
-        statusEl.textContent = `已自动保存  ${hh}:${mm}`;
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
       } catch (e) {
-        statusEl.textContent = "保存失败（浏览器存储可能已满）";
+        return null;
+      }
+    }
+
+    function writeLS(data) {
+      try {
+        localStorage.setItem(lsKey(), JSON.stringify(data));
+        if (!(EMBEDDED_DATA && EMBEDDED_DATA.docId)) {
+          localStorage.setItem(ANON_KEY, JSON.stringify({ docId: data.docId, savedAt: data.savedAt }));
+        }
+      } catch (e) {
+        statusEl.textContent = "本机暂存失败";
+      }
+    }
+
+    function fmtTime(ts) {
+      const d = ts ? new Date(ts) : new Date();
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mm = String(d.getMinutes()).padStart(2, "0");
+      return hh + ":" + mm;
+    }
+
+    function updateBindUI() {
+      if (!supportsFS()) {
+        bindBtn.hidden = true;
+        bannerEl.className = "banner no-fs no-print";
+        bannerEl.textContent =
+          "当前浏览器不能绑定文件自动写入，请用 Chrome 或 Edge。内容只暂存在本机，可用「打印 / 导出 PDF」。";
+        bannerEl.onclick = null;
+        statusEl.textContent = "仅本机暂存";
+        statusEl.classList.add("is-unsaved");
+        return;
+      }
+      if (bound) {
+        bindBtn.hidden = true;
+        bannerEl.className = "banner is-bound no-print";
+        bannerEl.textContent = "已绑定文件，填写会自动写入。发给同事请发送这个 HTML。";
+        bannerEl.onclick = null;
+        statusEl.classList.remove("is-unsaved");
+      } else {
+        bindBtn.hidden = false;
+        bannerEl.className = "banner need-auth no-print";
+        bannerEl.textContent =
+          "填写前请先点此授权，并选中当前这个 HTML。未授权时内容只留在这台电脑，关页或换机可能丢失。";
+        bannerEl.onclick = onBindClick;
+        statusEl.classList.add("is-unsaved");
+        if (!statusEl.textContent || statusEl.textContent.indexOf("已暂存") < 0) {
+          statusEl.textContent = "仅本机暂存 · 尚未绑定文件";
+        }
+      }
+    }
+
+    function saveLocal() {
+      const data = collect();
+      writeLS(data);
+      if (!bound) {
+        statusEl.textContent = "已暂存本机  " + fmtTime(data.savedAt) + "  · 尚未绑定文件";
+        statusEl.classList.add("is-unsaved");
       }
     }
 
     function scheduleSave() {
       clearTimeout(saveTimer);
-      saveTimer = setTimeout(save, 300);
+      saveTimer = setTimeout(saveLocal, 300);
+      if (bound && fileHandle) {
+        clearTimeout(fileTimer);
+        fileTimer = setTimeout(function () {
+          flushToFile();
+        }, 800);
+      }
     }
 
     function fitTextarea(el) {
@@ -919,29 +1283,9 @@
       document.querySelectorAll(".print-plain").forEach((el) => el.remove());
     }
 
-    function addRow(btn) {
-      const table = btn.parentElement.querySelector("table.data") || btn.previousElementSibling;
-      const tbody = table.querySelector("tbody");
-      const tr = tbody.querySelector("tr").cloneNode(true);
-      tr.querySelectorAll("input, textarea").forEach((el) => {
-        if (el.type === "checkbox") el.checked = false;
-        else el.value = "";
-        if (el.tagName === "TEXTAREA") el.style.height = "";
-      });
-      tbody.appendChild(tr);
-      scheduleSave();
-    }
-
-    function suggestedName() {
-      const project = (document.querySelector('[name="projectName"]') || {}).value || "";
-      const title = (document.querySelector('[name="docTitle"]') || {}).value || "项目交接文档";
-      const base = ((project ? project + "-" : "") + title).replace(/[\\/:*?"<>|]/g, "_");
-      return base + ".html";
-    }
-
     function bakeDom() {
       const snapshot = [];
-      document.querySelectorAll("input, textarea").forEach((el) => {
+      document.querySelectorAll("input, textarea, select").forEach((el) => {
         snapshot.push({
           el,
           value: el.type === "checkbox" || el.type === "radio" ? el.checked : el.value,
@@ -951,6 +1295,12 @@
         if (el.type === "checkbox" || el.type === "radio") {
           if (value) el.setAttribute("checked", "checked");
           else el.removeAttribute("checked");
+        } else if (el.tagName === "SELECT") {
+          el.setAttribute("value", value);
+          Array.from(el.options).forEach((o) => {
+            if (o.value === value) o.setAttribute("selected", "selected");
+            else o.removeAttribute("selected");
+          });
         } else if (el.tagName === "TEXTAREA") {
           el.textContent = value;
         } else {
@@ -963,11 +1313,8 @@
       });
     }
 
-    async function saveToFile() {
-      setCoverLocked(true);
-      save();
+    function buildHtml(data) {
       bakeDom();
-      const data = collect();
       let html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
       html = html.replace(
         /\/\*EMBEDDED_START\*\/[\s\S]*?\/\*EMBEDDED_END\*\//,
@@ -975,100 +1322,260 @@
           JSON.stringify(data).replace(/</g, "\\u003c") +
           ";/*EMBEDDED_END*/"
       );
-      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-      const name = suggestedName();
+      return html;
+    }
 
-      if (window.showSaveFilePicker) {
+    async function idbOpen() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(IDB_NAME, 1);
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE);
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function saveHandle(handle) {
+      const db = await idbOpen();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE, "readwrite");
+        tx.objectStore(IDB_STORE).put(handle, docId);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+      db.close();
+    }
+
+    async function loadHandle() {
+      try {
+        const db = await idbOpen();
+        const handle = await new Promise((resolve, reject) => {
+          const tx = db.transaction(IDB_STORE, "readonly");
+          const req = tx.objectStore(IDB_STORE).get(docId);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => reject(req.error);
+        });
+        db.close();
+        return handle || null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    async function ensurePermission(handle) {
+      const opts = { mode: "readwrite" };
+      let perm = await handle.queryPermission(opts);
+      if (perm === "granted") return true;
+      if (perm === "prompt") {
+        perm = await handle.requestPermission(opts);
+        return perm === "granted";
+      }
+      return false;
+    }
+
+    async function flushToFile() {
+      if (!fileHandle) return false;
+      if (writing) {
+        writeQueued = true;
+        return false;
+      }
+      writing = true;
+      try {
+        const data = collect();
+        const html = buildHtml(data);
+        const writable = await fileHandle.createWritable();
+        await writable.write(html);
+        await writable.close();
+        writeLS(data);
+        if (EMBEDDED_DATA) {
+          EMBEDDED_DATA.docId = data.docId;
+          EMBEDDED_DATA.savedAt = data.savedAt;
+        }
         try {
-          const handle = await window.showSaveFilePicker({
-            suggestedName: name,
-            types: [{ description: "HTML 文档", accept: { "text/html": [".html"] } }],
-          });
-          const writable = await handle.createWritable();
-          await writable.write(blob);
-          await writable.close();
-          statusEl.textContent = "已写入文件，把该 HTML 发给别人即可看到内容";
-          document.getElementById("banner").textContent =
-            "内容已固化到文件。请发送刚刚保存的那个 HTML，不要发送原来的空白模板。";
-          return;
-        } catch (e) {
-          if (e.name === "AbortError") return;
+          localStorage.removeItem(ANON_KEY);
+        } catch (e) {}
+        bound = true;
+        statusEl.textContent = "已写入文件  " + fmtTime(data.savedAt);
+        statusEl.classList.remove("is-unsaved");
+        return true;
+      } catch (e) {
+        bound = false;
+        fileHandle = null;
+        updateBindUI();
+        statusEl.textContent = "写入失败，请重新授权";
+        statusEl.classList.add("is-unsaved");
+        return false;
+      } finally {
+        writing = false;
+        if (writeQueued) {
+          writeQueued = false;
+          flushToFile();
         }
       }
+    }
 
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = name;
-      a.click();
-      URL.revokeObjectURL(a.href);
-      statusEl.textContent = "已下载带内容的 HTML，请发送下载文件";
-      document.getElementById("banner").textContent =
-        "内容已固化到下载文件。请发送下载目录里刚保存的 HTML，不要发送原来的空白模板。";
+    function suggestedName() {
+      const project = (document.querySelector('[name="projectName"]') || {}).value || "";
+      const title = (document.querySelector('[name="docTitle"]') || {}).value || "项目交接文档";
+      const base = ((project ? project + "-" : "") + title).replace(/[\\/:*?"<>|]/g, "_");
+      return base + ".html";
+    }
+
+    async function authorizePicker() {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: suggestedName(),
+        types: [{ description: "HTML 文档", accept: { "text/html": [".html"] } }],
+      });
+      fileHandle = handle;
+      await saveHandle(handle);
+      bound = true;
+      const ok = await flushToFile();
+      if (ok) updateBindUI();
+    }
+
+    async function onBindClick() {
+      if (!supportsFS()) return;
+      try {
+        if (fileHandle) {
+          const ok = await ensurePermission(fileHandle);
+          if (ok) {
+            bound = true;
+            await flushToFile();
+            updateBindUI();
+            return;
+          }
+        }
+        await authorizePicker();
+      } catch (e) {
+        if (e && e.name === "AbortError") return;
+        statusEl.textContent = "授权失败，请再点一次";
+      }
+    }
+
+    function addRow(btn) {
+      const table = btn.parentElement.querySelector("table.data") || btn.previousElementSibling;
+      const tbody = table.querySelector("tbody");
+      const tr = tbody.querySelector("tr").cloneNode(true);
+      tr.querySelectorAll("input, textarea").forEach((el) => {
+        if (el.type === "checkbox") el.checked = false;
+        else el.value = "";
+        if (el.tagName === "TEXTAREA") el.style.height = "";
+      });
+      stripPlaceholders(tr);
+      tbody.appendChild(tr);
+      scheduleSave();
     }
 
     function printDoc() {
       setCoverLocked(true);
-      save();
+      saveLocal();
+      if (bound) flushToFile();
       syncPrintMirrors();
       window.print();
     }
 
-    function exportJson() {
-      save();
-      const blob = new Blob([JSON.stringify(collect(), null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      const title = (document.querySelector('[name="docTitle"]').value || "项目交接文档").trim();
-      a.href = URL.createObjectURL(blob);
-      a.download = title + "-备份.json";
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-
-    function importJson() {
-      document.getElementById("importFile").click();
-    }
-
     function resetDoc() {
-      if (!confirm("确认清空本页已填写内容？此操作不可撤销。")) return;
-      localStorage.removeItem(KEY);
-      location.reload();
+      if (!confirm("确认恢复到本次打开时的内容？已绑定的文件也会写回打开时的状态。")) return;
+      if (!openSnapshot) return;
+      skipUnloadPrompt = true;
+      apply(openSnapshot);
+      if (openSnapshot.docId) docId = openSnapshot.docId;
+      saveLocal();
+      if (bound) flushToFile();
+      skipUnloadPrompt = false;
     }
 
-    document.getElementById("importFile").addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          apply(JSON.parse(reader.result));
-          save();
-          statusEl.textContent = "已导入备份";
-        } catch (err) {
-          alert("备份文件格式不正确");
-        }
-      };
-      reader.readAsText(file);
-      e.target.value = "";
-    });
+    function overlayFromStorage() {
+      const embeddedAt = (EMBEDDED_DATA && EMBEDDED_DATA.savedAt) || 0;
+      const ls = readLS(lsKey());
+      if (ls && ls.docId === docId && (ls.savedAt || 0) > embeddedAt) {
+        apply(ls);
+        return true;
+      }
+      return false;
+    }
+
+    async function restoreHandle() {
+      if (!supportsFS()) return;
+      const h = await loadHandle();
+      if (!h) return;
+      fileHandle = h;
+      try {
+        const perm = await h.queryPermission({ mode: "readwrite" });
+        if (perm === "granted") bound = true;
+      } catch (e) {
+        fileHandle = null;
+      }
+    }
 
     document.getElementById("sheet").addEventListener("input", (e) => {
+      if (e.target.closest(".cover")) return;
       if (e.target.tagName === "TEXTAREA") fitTextarea(e.target);
       scheduleSave();
     });
-    document.getElementById("sheet").addEventListener("change", scheduleSave);
+    document.getElementById("sheet").addEventListener("change", (e) => {
+      if (e.target.closest(".cover")) return;
+      scheduleSave();
+    });
+
+    bannerEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onBindClick();
+      }
+    });
+
+    window.addEventListener("beforeunload", (e) => {
+      if (skipUnloadPrompt) return;
+      saveLocal();
+      if (bound) {
+        flushToFile();
+        return;
+      }
+      const dirtyHints =
+        openSnapshot && JSON.stringify(hints) !== JSON.stringify(openSnapshot.hints || {});
+      if (!dataHasUserContent(collect()) && !dirtyHints) return;
+      e.preventDefault();
+      e.returnValue = "还有内容尚未绑定到文件，关闭后可能只留在这台电脑。";
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        saveLocal();
+        if (bound) flushToFile();
+      }
+    });
+    window.addEventListener("pagehide", () => {
+      saveLocal();
+      if (bound) flushToFile();
+    });
 
     window.addEventListener("beforeprint", syncPrintMirrors);
     window.addEventListener("afterprint", clearPrintMirrors);
 
-    try {
-      if (typeof EMBEDDED_DATA !== "undefined" && EMBEDDED_DATA) {
-        apply(EMBEDDED_DATA);
-      } else {
-        const raw = localStorage.getItem(KEY);
-        if (raw) apply(JSON.parse(raw));
+    (async function init() {
+      try {
+        if (typeof EMBEDDED_DATA !== "undefined" && EMBEDDED_DATA) apply(EMBEDDED_DATA);
+        overlayFromStorage();
+        ["hwReq","hwBug","ztReq","ztBug"].forEach((name) => {
+          const v = (EMBEDDED_DATA && EMBEDDED_DATA.fields && EMBEDDED_DATA.fields[name]) || "";
+          if (v !== "是" && v !== "否" && v !== "无") {
+            document.querySelectorAll('input[type="radio"][name="'+name+'"]').forEach((r) => { r.checked = false; });
+          }
+        });
+      } catch (e) {}
+      syncCodeArchNote();
+      openSnapshot = JSON.parse(JSON.stringify(collect()));
+      await restoreHandle();
+      updateBindUI();
+      if (bound) {
+        statusEl.textContent = "文件已含上次保存的内容";
+        statusEl.classList.remove("is-unsaved");
       }
-    } catch (e) {}
-    fitAllTextareas();
+      fitAllTextareas();
+    })();
   </script>
 
 
